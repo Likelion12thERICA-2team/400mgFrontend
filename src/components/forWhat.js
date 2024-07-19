@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "./Button";
 
-const forWhat = () =>
+const ForWhat = () =>
 	<section className="mt-[26px] mb-[32px] flex flex-col px-[12px]" >
 		<div className="text-[26px] font-AppleBold items-center " >
 			주로 무엇을 위해 카페인을 <br />
@@ -26,4 +26,4 @@ const forWhat = () =>
 	</section>
 
 
-export default forWhat;
+export default ForWhat;

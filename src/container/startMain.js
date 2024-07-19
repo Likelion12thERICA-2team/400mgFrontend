@@ -1,6 +1,6 @@
 import Start from "../components/Start"
 
-const startMain = () => {
+const StartMain = () => {
   return ( 
     <div className="">
       <main className=''>
@@ -12,4 +12,4 @@ const startMain = () => {
   );
 }
  
-export default startMain;
+export default StartMain;

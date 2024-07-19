@@ -1,15 +1,16 @@
-import forWhat from "../components/forWhat"
 
-const signUp2 = () => {
+import ForWhat from "../components/forWhat"
+
+const SignUp2 = () => {
   return ( 
     <div className="">
       <main className=''>
         <div className=''>
-          <forWhat />
+          <ForWhat />
         </div>
       </main>
     </div>
   );
 }
  
-export default signUp2;
+export default SignUp2;
