@@ -1,13 +1,54 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+:root {
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin: 0;
 }
+
+@font-face {
+  font-family: "AppleBold";
+  src: url("./fonts/AppleSDGothicNeoB.ttf");
+}
+
+@font-face {
+  font-family: "AppleExBold";
+  src: url("./fonts/AppleSDGothicNeoEB.ttf");
+}
+
+@font-face {
+  font-family: "AppleSemiBold";
+  src: url("./fonts/AppleSDGothicNeoSB.ttf");
+}
+
+@font-face {
+  font-family: "AppleReBold";
+  src: url("./fonts/AppleSDGothicNeoR.ttf");
+}
+
+@font-face {
+  font-family: "AppleMedium";
+  src: url("./fonts/AppleSDGothicNeoM.ttf");
+}
+
+@layer components {
+  .glassPurple {
+    border-radius: 20px;
+    background: var(--glass-purple, linear-gradient(153deg, rgba(132, 120, 247, 1) 100%, rgba(132, 251205, 247, 1) 100%));
+    backdrop-filter: blur(21px);
+  }
+  .glassWhite2 {
+    border-radius: 10px;
+    background: var(--glass-white, linear-gradient(153deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.00) 100%));
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(21px);
+  }
+  
+  }
+
