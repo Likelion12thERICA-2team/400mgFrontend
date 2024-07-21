@@ -29,7 +29,7 @@ body {
 
 @font-face {
   font-family: "AppleReBold";
-  src: url("./fonts/AppleSDGothicNeoR.ttf");
+  src: url("./fonts/AppleSDGothicNeoR.ttf") format('truetype');
 }
 
 @font-face {

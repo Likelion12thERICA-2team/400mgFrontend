@@ -16,6 +16,9 @@ module.exports = {
       'AppleReBold' : ['AppleReBold'],
       'AppleMedium' : ['AppleMedium']
     },
+    backgroundImage: {
+      'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+    },
     colors: {
       'main1' : '#536FF4',
       'main2' : '#789AF4',
