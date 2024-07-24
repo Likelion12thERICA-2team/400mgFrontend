@@ -17,7 +17,7 @@ const Button = ({ backgroundColor, color, content, link }) => {
   return (
     <button
       className={`rounded-[20px] w-[350px] h-[64px]`}
-      style={{ backgroundColor: bgColor, color }}
+      style={{ backgroundColor: bgColor, color: color }}
       onClick={linkTo}
     >
       {content}

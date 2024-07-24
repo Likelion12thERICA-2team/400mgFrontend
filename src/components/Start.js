@@ -13,7 +13,7 @@ const Start = () =>
 			올바른 카페인 습관 챙기기
 		</div>
 		<div className="w-[350px] h-[64px] mt-[85px] " >
-			<Button backgroundColor="#8478F7" Color="white" content={"시작하기"} link={'/start/signup2'} />
+			<Button backgroundColor="#8478F7" color="white" content={"시작하기"} link={'/start/signup1'} />
 		</div>
 	</section>
 

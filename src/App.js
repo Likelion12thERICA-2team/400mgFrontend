@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Splash from "./container/splash";
 import StartMain from "./container/startMain";
+import SignUp1 from './container/signUp1';
 import SignUp2 from './container/signUp2';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Splash />}></Route>
           <Route path="/start" element={<StartMain />}></Route>
+          <Route path="/start/signup1" element={<SignUp1 />}></Route>
           <Route path="/start/signup2" element={<SignUp2 />}></Route>
         </Routes>
       </BrowserRouter>
