@@ -1,4 +1,4 @@
-import Start from "../components/start"
+import Start from "../components/Start"
 
 const StartMain = () => {
   return ( 
