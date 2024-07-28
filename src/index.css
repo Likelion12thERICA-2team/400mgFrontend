@@ -14,7 +14,7 @@ body {
 
 @font-face {
   font-family: "AppleBold";
-  src: url("./fonts/AppleSDGothicNeoB.ttf");
+  src: url("./fonts/AppleSDGothicNeoB.ttf")  format('truetype');
 }
 
 @font-face {
@@ -24,7 +24,7 @@ body {
 
 @font-face {
   font-family: "AppleSemiBold";
-  src: url("./fonts/AppleSDGothicNeoSB.ttf");
+  src: url("./fonts/AppleSDGothicNeoSB.ttf") format('truetype');
 }
 
 @font-face {
@@ -34,7 +34,7 @@ body {
 
 @font-face {
   font-family: "AppleMedium";
-  src: url("./fonts/AppleSDGothicNeoM.ttf");
+  src: url("./fonts/AppleSDGothicNeoM.ttf")  format('truetype');
 }
 
 @layer components {

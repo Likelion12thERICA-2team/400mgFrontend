@@ -40,7 +40,7 @@ const ForWhat = () => {
 							backgroundColor={selected ? "#CBC7F6" : "#8478F7"}
 							color="white"
 							content={"계속하기"}
-							link={"/"}
+							link={"/start/bodyInfo1"}
 						/>
 					</div>
 				</div>
