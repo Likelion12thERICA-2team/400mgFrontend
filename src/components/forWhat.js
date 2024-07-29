@@ -36,7 +36,7 @@ const ForWhat = () => {
 						<Button backgroundColor="#EBEBEB" color="black" content={"기타"} />
 					</div>
 				</div>
-				<div className="absolute bottom-8 w-full flex justify-center">
+				<div className="absolute bottom-[32px] w-full flex ">
 					<div className="w-full max-w-md">
 					<Button backgroundColor={selected ? "#CBC7F6" : "#8478F7"} color="white" content={"계속하기"} link={"/start/signup3"} />
 					</div>

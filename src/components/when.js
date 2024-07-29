@@ -30,8 +30,8 @@ const When = () => {
 				정확하게 기억이 안나도 괜찮아요<br />
                 중복 선택도 가능해요
 			</div>
-			<div className="w-[350px] bg-gray-200 mt-[158px] items-center justify-center" >
-				<div className="text-[26px] w-full h-[64px] flex items-center relative " >
+			<div className="w-[350px]  mt-[158px] items-center justify-center" >
+				<div className="text-[26px] w-full h-[64px]  flex items-center relative " >
 					<WheelPicker items={['오전', '오후']} onSelect={setCurrentPeriod}/>
 					<WheelPicker items={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]} onSelect={setCurrentHour} />
 					<div className="text-[26px] font-AppleSemiBold ml-[8px] mr-[20px]">시 </div>
@@ -45,7 +45,7 @@ const When = () => {
 					</div>
 					))}
 				</div>
-				<div className="absolute bottom-8 w-full flex justify-center">
+				<div className="absolute bottom-[32px] w-full flex">
 					<div className=" w-full max-w-md">
 					<Button backgroundColor="#8478F7" color="white" content={"계속하기"} link={"/start/bodyInfo1"} />
 					</div>
