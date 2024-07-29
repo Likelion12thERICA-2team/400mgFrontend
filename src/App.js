@@ -10,6 +10,7 @@ import BodyInfo1 from './container/bodyInfo1';
 import BodyInfo2 from './container/bodyInfo2';
 import BodyInfo3 from './container/bodyInfo3';
 import Loading from './container/loading';
+import SignUp3 from "./container/signUp3"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/start" element={<StartMain />}></Route>
             <Route path="/start/signup1" element={<SignUp1 />}></Route>
             <Route path="/start/signup2" element={<SignUp2 />}></Route>
+            <Route path="/start/signup3" element={<SignUp3 />}></Route>
             <Route path="/start/bodyInfo1" element={<BodyInfo1 />}></Route>
             <Route path="/start/bodyInfo2" element={<BodyInfo2 />}></Route>
             <Route path="/start/bodyInfo3" element={<BodyInfo3 />}></Route>

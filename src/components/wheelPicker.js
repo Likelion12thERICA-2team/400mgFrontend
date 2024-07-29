@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const itemHeight = 40;
 
 
-const WheelPicker = ({items}) => {
+const WheelPicker = ({items, onSelect}) => {
   const [selectedItem, setSelectedItem] = useState(items[2]); // 초기 선택 항목을 중앙으로 설정
   const listRef = useRef(null);
 
@@ -28,18 +28,16 @@ const WheelPicker = ({items}) => {
       top: (index + 2) * itemHeight, // 중앙에 선택된 항목이 위치하도록 스크롤 조정
       behavior: 'smooth',
     });
-  }, [selectedItem]);
+    onSelect(selectedItem);
+  }, [selectedItem, onSelect]);
 
   return (
     <div className="flex flex-col items-center">
       <div className="relative h-40 w-32 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center " style={{ zIndex: 1 }}>
-          <div style={{ height: '40px', backgroundColor: '#EEEDF0', position: 'absolute', top: '50%', transform: 'translateY(-50%)', width: '100%' }} />
-      </div>
       <div
         ref={listRef}
         className="h-full overflow-y-scroll"
-        style={{ scrollSnapType: 'y mandatory', zIndex: 2, position: 'relative' }}
+        style={{ scrollSnapType: 'y mandatory', position: 'relative' }}
       >
           <ul className="h-full">
             {Array(2).fill(null).map((_, index) => ( // 위쪽에 빈 항목 추가
