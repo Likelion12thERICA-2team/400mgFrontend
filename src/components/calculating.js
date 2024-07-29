@@ -18,7 +18,7 @@ const Calculating = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigate('/'); // 여기에 다음 페이지 URL 넣기
+            navigate('/main'); // 여기에 다음 페이지 URL 넣기
         }, 1750); // 1.75초 후 이동
 
         return () => clearTimeout(timer);
