@@ -217,7 +217,7 @@ const SelectGender = () => {
                             backgroundColor={selectedGender ? "#CBC7F6" : "#8478F7"} 
                             color={"white"} 
                             content={"계속하기"}
-                            link="/"
+                            link="/start/bodyInfo2"
                         />   
                     </div>
                 </>
