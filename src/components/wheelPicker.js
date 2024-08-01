@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 const itemHeight = 40;
 
 
-const WheelPicker = ({items, onSelect}) => {
+const WheelPicker = ({items, onSelect}) => {  // items에 선택 옵션들 배열로 넣으면 됨
   const [selectedItem, setSelectedItem] = useState(items[2]); // 초기 선택 항목을 중앙으로 설정
   const listRef = useRef(null);
 
@@ -32,7 +32,7 @@ const WheelPicker = ({items, onSelect}) => {
   }, [selectedItem, onSelect]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center no-scrollbar">
       <div className="relative h-40 w-32 overflow-hidden">
       <div
         ref={listRef}

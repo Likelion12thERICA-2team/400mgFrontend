@@ -21,7 +21,7 @@ const When = () => {
 	  };
 
 	return(
-		<section className="mt-[26px] mb-[32px] flex flex-col tems-center justify-center m-[20px] " >
+		<section className="mt-[26px] mb-[32px] flex flex-col tems-center justify-center m-[20px]" >
 			<div className="text-[26px] font-AppleBold items-center" >
 				카페인을 섭취하는 시간대를 <br />
 				알려주세요
@@ -34,12 +34,12 @@ const When = () => {
 				<div className="text-[26px] w-full h-[64px]  flex items-center relative " >
 					<WheelPicker items={['오전', '오후']} onSelect={setCurrentPeriod}/>
 					<WheelPicker items={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]} onSelect={setCurrentHour} />
-					<div className="text-[26px] font-AppleSemiBold ml-[8px] mr-[20px]">시 </div>
+					<div className="text-[26px] font-[AppleSemiBold] ml-[8px] mr-[20px]">시 </div>
 					<ImageButton src={Plus} alt="Add time" onClick={addTime} />
 				</div>
 				<div className="mt-[200px] px-[12px] flex flex-wrap mb-[11px]">
 					{selectedTimes.map(time => (
-					<div key={time} className="flex items-center bg-grayLight text-AppleMedium px-2 py-1 rounded-[10px] mr-2 mt-2">
+					<div key={time} className="flex items-center bg-grayLight text-[AppleMedium] px-2 py-1 rounded-[10px] mr-2 mt-2">
 						{time}
 						<button onClick={() => removeTime(time)} className="ml-2 text-red-500">x</button>
 					</div>

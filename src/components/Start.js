@@ -8,7 +8,7 @@ const Start = () =>
 		<div className=" " >
 			<img src={LogoStart} alt="첫화면 얼굴" className=" w-[250px] h-[332px]" />
 		</div>
-		<div className="text-[26px] text-center font-AppleSemiBold items-center" >
+		<div className="text-[26px] text-center font-[AppleSemiBold] items-center" >
 			400mg과 함께 <br />
 			올바른 카페인 습관 챙기기
 		</div>

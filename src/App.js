@@ -12,6 +12,8 @@ import BodyInfo3 from './container/bodyInfo3';
 import Loading from './container/loading';
 import SignUp3 from "./container/signUp3"
 import Main from "./container/main"
+import Report from './container/report'
+
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path="/start/bodyInfo3" element={<BodyInfo3 />}></Route>
             <Route path="/start/loading" element={<Loading />}></Route>
             <Route path="/main" element={<Main />}></Route>
+            <Route path="/report" element={<Report />}></Route>
           </Routes>
       {/* </Layout> */}
       </BrowserRouter>

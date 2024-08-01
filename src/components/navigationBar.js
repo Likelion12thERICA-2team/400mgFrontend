@@ -12,7 +12,7 @@ import sCummunity from "../assets/selectedSpeaker_notes.png"
 import sMypage from "../assets/selectedAccount_circle.png"
 
 
-// 사용법 : <NavigationBar page={"home"} /> home, record, community, mypage 중 하나 사용
+// 사용법 : <NavigationBar page={"home"} /> home, report, community, mypage 중 하나 사용
 
 const NavigationBar = ({ page }) => {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const NavigationBar = ({ page }) => {
         <>
             <div className="w-[375px] h-[70px] border-t-[0.5px] 
                 border-t-[#999999] rounded-t-[30px] bg-[#FFFFFF] mt-[10px]
-                pt-[17px]">
+                pt-[17px] fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50 items-start">
                 <div className="w-[375px] h-[39px] flex flex-row justify-center items-center">
                     <NavButton 
                         onClick={() => navigate("/main")}
@@ -34,7 +34,7 @@ const NavigationBar = ({ page }) => {
                         label="홈"
                     />
                     <NavButton 
-                        onClick={() => navigate("/record")} //URL 변경해야함.
+                        onClick={() => navigate("/report")} //URL 변경완료
                         imgSrc={getImage("record", record, sRecord)}
                         altText="기록"
                         label="기록"
