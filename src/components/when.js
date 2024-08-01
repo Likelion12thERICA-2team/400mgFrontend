@@ -21,17 +21,17 @@ const When = () => {
 	  };
 
 	return(
-		<section className="mt-[26px] mb-[32px] flex flex-col tems-center justify-center m-[20px]" >
+		<section className="mt-[26px] mb-[32px] flex flex-col items-start justify-center m-[20px]" >
 			<div className="text-[26px] font-AppleBold items-center" >
 				카페인을 섭취하는 시간대를 <br />
 				알려주세요
 			</div>
-			<div className="text-[16px] font-AppleMeBold items-center " >
+			<div className="text-[16px] text-[#5A5A5A] font-AppleMedium items-center " >
 				정확하게 기억이 안나도 괜찮아요<br />
                 중복 선택도 가능해요
 			</div>
-			<div className="w-[350px]  mt-[158px] items-center justify-center" >
-				<div className="text-[26px] w-full h-[64px]  flex items-center relative " >
+			<div className="w-[350px]  mt-[158px] items-center justify-center " >
+				<div className="text-[26px] w-full h-[64px]  flex items-center relative text-AppleSemiBold " >
 					<WheelPicker items={['오전', '오후']} onSelect={setCurrentPeriod}/>
 					<WheelPicker items={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]} onSelect={setCurrentHour} />
 					<div className="text-[26px] font-[AppleSemiBold] ml-[8px] mr-[20px]">시 </div>

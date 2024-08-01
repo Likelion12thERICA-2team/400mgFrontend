@@ -14,7 +14,7 @@ const HowMuch = () => {
 				평소에 커피나 드링크같은 <br />
 				각성제를 얼마나 마시나요?
 			</div>
-			<div className="text-[16px] font-AppleMeBold items-center " >
+			<div className="text-[16px] text-[#5A5A5A] font-AppleMedium items-center " >
 				정확하게 기억이 안나도 괜찮아요
 			</div>
 			<div className="w-[350px] h-[64px] mt-[158px] items-center justify-center" >

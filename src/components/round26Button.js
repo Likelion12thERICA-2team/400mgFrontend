@@ -5,14 +5,20 @@ const Round26Button = ({ backgroundColor, color, content, link, fontStyle }) => 
   const navigate = useNavigate();
   const [bgColor, setBgColor] = useState(backgroundColor);
   const [isSelected, setIsSelected] = useState(false); // 선택 상태 추가
+  const [textColor, setTextColor] = useState(color); 
 
   const linkTo = () => {
     if (link) {
       navigate(link);
     } else {
       // 링크가 없는 경우 배경색을 변경합니다.
-      setBgColor(bgColor === backgroundColor ? '#A198F6' : backgroundColor);
-      setIsSelected(!isSelected); // 선택 상태 토글
+      if (bgColor === backgroundColor) {
+        setBgColor('#A198F6');
+        setTextColor('#FFFFFF'); // 글자 색상을 하얀색으로 변경
+      } else {
+        setBgColor(backgroundColor);
+        setTextColor(color); // 글자 색상을 원래 색상으로 복원
+      }
     }
   };
 
@@ -32,7 +38,7 @@ const Round26Button = ({ backgroundColor, color, content, link, fontStyle }) => 
   return (
     <button
       className={`text-[16px] rounded-[26px] w-[94px] h-[44px] ${getFontStyleClass(fontStyle)}`}
-      style={{ backgroundColor: bgColor, color: isSelected ? '#FFFFFF' : color }}
+      style={{ backgroundColor: bgColor, color: isSelected ? '#FFFFFF' : textColor }}
       onClick={linkTo}
     >
       {content}

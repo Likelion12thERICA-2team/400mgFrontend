@@ -89,7 +89,7 @@ const SelectGender = () => {
             (
                 <>
                     <div className="">
-                        <div className="text-[14px] text-[#5A5A5A] font-[AppleReBold] mt-[40px] mb-[26px]">
+                        <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px] mb-[26px]">
                             키 / 몸무게
                         </div>
 
@@ -150,7 +150,7 @@ const SelectGender = () => {
             (
                 <>
                     <div className="">
-                        <div className="text-[14px] text-[#5A5A5A] font-[AppleReBold] mt-[40px] mb-[10px]">
+                        <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px] mb-[10px]">
                             생년월일
                         </div>
 
@@ -192,7 +192,7 @@ const SelectGender = () => {
                 </>
             )
             }
-            <div className="text-[14px] text-[#5A5A5A] font-[AppleReBold] mt-[40px]">
+            <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px]">
                 성별
             </div>
             <div className="flex flex-row gap-[11px] mt-[10px]">
