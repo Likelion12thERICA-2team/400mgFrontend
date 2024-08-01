@@ -104,7 +104,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
         // 각 달의 마지막에 회색 구분선 추가
         if (lastDayOfMonth) {
             rows.push(
-                <div className="w-full border-b-[6px] border-lightGray mt-[40px]" key={uuid()}></div>,
+                <div className="w-full left-0 right-0 border-b-[6px] border-lightGray " key={uuid()}></div>,
             );
             lastDayOfMonth = false;
         }
@@ -173,7 +173,7 @@ const Calendar = () => {
     };
 
     return (
-        <div className="flex flex-col items-center font-[AppleRegular] mt-[20px] mb-[32px] mx-[5px]">
+        <div className="flex flex-col items-center font-[AppleRegular] mt-[20px] mb-[32px] mx-[5px] ">
             <div className="sticky top-0 w-full z-20  bg-white flex flex-col items-center pt-[15px] pb-[10px]">
                 {!isBottomSheetVisible && (
                     <div className="w-[80%] flex justify-between items-baseline text-theme-main-color pb-[10px]">

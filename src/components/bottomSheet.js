@@ -5,7 +5,7 @@ import { animated, useSpring } from "@react-spring/web";
 import CaffeineBarGraph from "./barGraph";
 import WeeklyCaffeineGraph from "./weekGraph";
 
-import arrow_right from "../assets/arrow_right.png"
+import arrow_right from "../assets/arrow_right_black.png"
 import neurology from "../assets/neurology.png"
 import coffee from "../assets/coffee.png"
 
@@ -35,7 +35,7 @@ const BottomSheet = ({ date, onClose }) => {
         { date: '7.18', amount: 180, isToday: false },
         { date: '7.19', amount: 240, isToday: false },
         { date: '7.20', amount: 120, isToday: false },
-        { date: '7.21', amount: 200, isToday: true },
+        { date: '7.21', amount: 250, isToday: true },
     ];
 
     useEffect(() => {

@@ -25,7 +25,7 @@ const NavigationBar = ({ page }) => {
         <>
             <div className="w-[375px] h-[70px] border-t-[0.5px] 
                 border-t-[#999999] rounded-t-[30px] bg-[#FFFFFF] mt-[10px]
-                pt-[17px] fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50 items-start">
+                pt-[17px] fixed bottom-0 left-1/2  -translate-x-1/2 z-50 items-start">
                 <div className="w-[375px] h-[39px] flex flex-row justify-center items-center">
                     <NavButton 
                         onClick={() => navigate("/main")}
@@ -46,7 +46,7 @@ const NavigationBar = ({ page }) => {
                         label="커뮤니티"
                     />
                     <NavButton 
-                        onClick={() => navigate("/mypage")} //URL 변경해야함.
+                        onClick={() => navigate("/mypage")} //URL 변경 완료
                         imgSrc={getImage("my", mypage, sMypage)}
                         altText="마이"
                         label="마이"

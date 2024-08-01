@@ -13,6 +13,7 @@ import Loading from './container/loading';
 import SignUp3 from "./container/signUp3"
 import Main from "./container/main"
 import Report from './container/report'
+import Mypages from './container/myPage';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/start/loading" element={<Loading />}></Route>
             <Route path="/main" element={<Main />}></Route>
             <Route path="/report" element={<Report />}></Route>
+            <Route path="/mypage" element={<Mypages />}></Route>
           </Routes>
       {/* </Layout> */}
       </BrowserRouter>
