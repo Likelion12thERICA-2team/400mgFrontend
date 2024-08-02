@@ -5,8 +5,7 @@ import pen from "../assets/edit.png"
 import error from "../assets/error.png";
 import back from "../assets/arrow_back_ios.png"
 import coffee from "../assets/coffee2.png"
-import circle from "../assets/circleButton.png"
-import scircle from "../assets/sCircleButton.png"
+
 
 import good from "../assets/motion_양호.gif";
 import normal from "../assets/motion_보통.gif";
@@ -24,6 +23,7 @@ import Coffee from "./coffee";
 import Energy from "./energy";
 import Dessert from "./dessert";
 import ButtonGroup from "./buttonGroup";
+import CaffeineGraph from "./caffeineGraph";
 
 const State = () => {
     
@@ -43,6 +43,9 @@ const State = () => {
     const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
     const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
 
+    // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
+    const dummyCaffeineData = Array(145).fill(0).map(() => Math.random() * 100);
+
 
     // 토글 버튼 클릭 시 호출되는 함수
     const handleToggle = (index) => {
@@ -53,7 +56,7 @@ const State = () => {
     const inputRef = useRef(null);
 
     //임의의 카페인 섭취량
-    const caffeineAmount = 400 ;
+    const caffeineAmount = 600 ;
 
     // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
     useEffect(() => {
@@ -399,17 +402,20 @@ const State = () => {
                             <div className="w-[375px] border-[0.75px] border-[#999999] mt-[18px]" />
 
                             {/* 여기서 [그래프 + 선 + 시간] 들어가기 */}
-                            <div className="w-[375px] h-[73px] ">
-                                
-                            </div>
 
-                            <div className="w-[375px] border-[0.75px] border-[#999999]" />
+                            <CaffeineGraph caffeineData={dummyCaffeineData} />
+
+                            {/* <div className="w-[375px] h-[73px] ">
+                                
+                            </div> */}
+
+                            {/* <div className="w-[375px] border-[0.75px] border-[#999999]" /> */}
 
                             {/* 시간 들어가야됨 */}
-                            <div className="w-[375px] h-[20px] ">
+                            {/* <div className="w-[375px] h-[20px] ">
 
 
-                            </div>
+                            </div> */}
 
                             <div className="w-[375px] h-[28px] flex justify-center mt-[3px]">
                                 <div 
