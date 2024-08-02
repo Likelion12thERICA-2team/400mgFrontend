@@ -14,6 +14,7 @@ import SignUp3 from "./container/signUp3"
 import Main from "./container/main"
 import Report from './container/report'
 import Mypages from './container/myPage';
+import Login from "./components/login"
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Splash />}></Route>
             <Route path="/start" element={<StartMain />}></Route>
+            <Route path="/start/login" element={<Login />}></Route>
             <Route path="/start/signup1" element={<SignUp1 />}></Route>
             <Route path="/start/signup2" element={<SignUp2 />}></Route>
             <Route path="/start/signup3" element={<SignUp3 />}></Route>
