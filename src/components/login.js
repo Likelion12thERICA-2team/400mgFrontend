@@ -1,14 +1,14 @@
 import React from "react";
 import Button from "./Button";
 
-const SetNickname = () => {
+const Login = () => {
 
     return (
         <section className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]">
 
             <div className="text-[26px] font-[AppleBold]">
-                거의 다왔어요. <br/>
-                뭐라고 부르면 될까요?
+                다시 돌아온 걸 환영해요 <br/>
+                <span className="text-[16px] text-gray font-AppleSemiBold">로그인하기 위한 회원정보를 입력해주세요</span>
             </div>
 
             <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[100px] ml-[119px]">
@@ -57,8 +57,9 @@ const SetNickname = () => {
 					</div>
 			</div>
 
+
         </section>
     );
 };
 
-export default SetNickname
+export default Login;
