@@ -4,6 +4,9 @@ import notificationWhite from "../assets/notificationsWhite.png";
 import pen from "../assets/edit.png"
 import error from "../assets/error.png";
 import back from "../assets/arrow_back_ios.png"
+import coffee from "../assets/coffee2.png"
+import circle from "../assets/circleButton.png"
+import scircle from "../assets/sCircleButton.png"
 
 import good from "../assets/motion_양호.gif";
 import normal from "../assets/motion_보통.gif";
@@ -16,6 +19,11 @@ import NavigationBar from "./navigationBar";
 
 import Significant from "./significant";
 import Button from "./Button";
+import NewToggle from "./newToggle";
+import Coffee from "./coffee";
+import Energy from "./energy";
+import Dessert from "./dessert";
+import ButtonGroup from "./buttonGroup";
 
 const State = () => {
     
@@ -29,6 +37,18 @@ const State = () => {
     const [isBoxVisible, setIsBoxVisible] = useState(false); // 경고 박스 아래에서 위로 올라오기
     const [isRecordVisible, setIsRecordVisible] = useState(false); // 경고 박스 아래에서 위로 올라오기
     const [isFirstTab, setIsFirstTab] = useState(true);
+    const [isSecondTab, setIsSecondTab] = useState(false);
+    const [isThirdTab, setIsThirdTab] = useState(false);
+    
+    const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
+    const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
+
+
+    // 토글 버튼 클릭 시 호출되는 함수
+    const handleToggle = (index) => {
+        // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
+        setOpenToggle(openToggle === index ? null : index);
+    };
 
     const inputRef = useRef(null);
 
@@ -51,11 +71,43 @@ const State = () => {
 
     const noBox = () => {
         setIsBoxVisible(!isBoxVisible);
+        console.log(isFirstTab);
     }
 
     const yesBox = () => {
         setIsBoxVisible(!isBoxVisible);
         setIsRecordVisible(!isRecordVisible);
+    }
+
+    const complete = () => {
+        setIsRecordVisible(!isRecordVisible);
+        setIsFirstTab(true);
+        setIsSecondTab(false);
+        setIsThirdTab(false);
+    }
+
+    useEffect(() => {
+        console.log("Updated isFirstTab:", isFirstTab);
+    }, [isFirstTab]);
+    
+    useEffect(() => {
+        console.log("Updated isSecondTab:", isSecondTab);
+    }, [isSecondTab]);
+
+    useEffect(() => {
+        console.log("Updated isThirdTab:", isThirdTab);
+    }, [isThirdTab]);
+
+    const firstTab = () => {
+        setIsFirstTab(!isFirstTab);
+    }
+
+    const secondTab = () => {
+        setIsSecondTab(!isSecondTab);
+    }
+
+    const thirdTab = () => {
+        setIsThirdTab(!isThirdTab);
     }
 
     // 그래프 밑 문구 감싸는 테두리 크기 변경 함수
@@ -403,7 +455,7 @@ const State = () => {
                                     <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요.
                                 </div>
                             </div>
-                            <div className="font-[AppleReBold] text-[#222222] text-[16px] mt-[12px]">
+                            <div className="font-AppleRegular text-[#222222] text-[16px] mt-[12px]">
                                 계속 기록하시겠어요?
                             </div>
                             <div className="flex flex-row gap-[8px] text-[16px] mt-[46px]">
@@ -446,84 +498,227 @@ const State = () => {
                                     </div>
                                 </>
                             ) :
+                            isSecondTab ?
+                                (
+                                    <>
+                                        <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                                
+                                            <button onClick={() =>{firstTab(); secondTab();}}>
+                                                <img src={back} alt="뒤로가기" className="w-[20px] h-[20px] ml-[23px]"/>
+                                            </button>
+                    
+                                            <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                                            기록
+                                            </div>
+                                        </div>
+                                    </>
+                                ) :
+                                isThirdTab ?
+                                    (
+                                        <>
+                                            <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                                    
+                                                <button onClick={() =>{secondTab(); thirdTab();}}>
+                                                    <img src={back} alt="뒤로가기" className="w-[20px] h-[20px] ml-[23px]"/>
+                                                </button>
+                        
+                                                <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                                                기록
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) :
+                                    (
+                                        <>
+                                            <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                                    
+                                                <button onClick={() =>{secondTab();}}>
+                                                    <img src={back} alt="뒤로가기" className="w-[20px] h-[20px] ml-[23px]"/>
+                                                </button>
+                        
+                                                <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                                                기록
+                                                </div>
+                                            </div>
+                                        </>
+                                    )
+                        }
+                        {isFirstTab ?
                             (
                                 <>
-                                    <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
-                            
-                                        <button >
-                                            <img src={back} alt="뒤로가기" className="w-[20px] h-[20px] ml-[23px]"/>
-                                        </button>
-                            
-                                        <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
-                                            기록
-                                        </div>
+                                    <div className="w-[375px] h-[72px] flex flex-row justify-start mt-[10px]">
+                                        <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                                            카페인을 기록하기 전에 오늘의 <br/>상태를 알려주세요.
+                                        </span>
+                                    </div>
+
+                                    <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
+                                        <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 나의 컨디션 </span>
+                                    </div>
+
+                                    <ButtonGroup />
+                                    <div className="w-[375px] h-[18px] flex flex-row gap-[53px] mt-[22px] justify-center ml-[4px]">
+                                        <span className="font-AppleMedium text-[12px] text-[#999999]">최악</span>
+                                        <span className="font-AppleMedium text-[12px] text-[#999999]">별로</span>
+                                        <span className="font-AppleMedium text-[12px] text-[#999999]">보통</span>
+                                        <span className="font-AppleMedium text-[12px] text-[#999999]">양호</span>
+                                        <span className="font-AppleMedium text-[12px] text-[#999999]">최상</span>
+
+                                    </div>
+
+                                    <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
+                                        <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 수면시간 </span>
+                                    </div>
+
+                                    <div className="w-[375px] h-[44px] flex flex-row justify-start items-center mt-[10px]">
+                                        <input
+                                            type="text" 
+                                            placeholder="시간"
+                                            className="ml-[21px] w-[71px] h-[44px] bg-[#EBEBEB] rounded-[10px] 
+                                                text-[#999999] text-[16px] font-AppleMedium text-center"
+                                        />
+                                        <span className="w-[28px] h-[24px] ml-[5px] text-[16px] font-AppleMedium text-[#5A5A5A]">
+                                            시간
+                                        </span>
+                                    </div>
+
+                                    <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
+                                        <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 특이사항 </span>
+                                    </div>
+                                    <div className="ml-[21px]">
+                                        <Significant />
+                                    </div>
+
+                                    <div className="mt-[46px] flex justify-center">
+                                        <Button 
+                                            backgroundColor= {"#8478F7"} 
+                                            color={"white"} 
+                                            content={"계속하기"}
+                                            onClick={() =>{firstTab(); secondTab();}}
+                                        /> 
                                     </div>
 
                                 </>
-                            )
+                            ) :
+                            isSecondTab ?
+                                (
+                                    <>
+                                        <div className="w-[375px] h-[108px] flex flex-row justify-start mt-[10px]">
+                                            <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                                                오늘 마신 커피나 드링크같은 <br/>
+                                                각성제의 카페인 함유량을 <br/>
+                                                알고있나요?
+                                            </span>
+                                        </div>
+
+                                        <div className="">
+                                            <img src={coffee} alt="커피" className=""/>
+                                        </div>
+
+                                        <div className="mt-[31px] flex justify-center">
+                                            <Button 
+                                                backgroundColor= {"#8478F7"} 
+                                                color={"white"} 
+                                                content={"예"}
+                                                fontStyle={"AppleSemiBold"}
+                                                onClick={() =>{secondTab(); thirdTab()}}
+                                            /> 
+                                        </div>
+                                        <div className="mt-[12px] flex justify-center">
+                                            <Button 
+                                                backgroundColor= {"#EBEBEB"} 
+                                                color={"black"} 
+                                                content={"아니오"}
+                                                fontStyle={"AppleRegular"}
+                                                onClick={() =>{secondTab();}}
+                                            /> 
+                                        </div>
+                                    </>
+                                ) :
+                                isThirdTab ?
+                                (
+                                    <>
+                                        <div className="w-[375px] h-[36px] flex flex-row justify-start mt-[10px]">
+                                            <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                                                함유량을 적어주세요.
+                                            </span>
+                                        </div>
+                                        <div className="w-[375px] h-[24px] flex flex-row justify-start mt-[83px] ml-[23px]">
+
+                                        <input 
+                                            type="text"
+                                            placeholder="카페인"
+                                            className="w-[106px] h-[24px] font-AppleMedium text-right border-b border-[#999999] text-[16px]"
+                                            
+                                        />
+                                        <input 
+                                            type="text" 
+                                            placeholder="mg"
+                                            className="w-[34px] h-[24px] font-AppleMedium text-right border-b border-[#999999]
+                                                bg-[#FFFF] placeholder-black text-[16px]" 
+                                            disabled
+                                        />
+                                        </div>
+
+                                        <div className="mt-[447px] flex justify-center">
+                                            <Button 
+                                                backgroundColor= {"#8478F7"} 
+                                                color={"white"} 
+                                                content={"완료"}
+                                                fontStyle={"AppleRegular"}
+                                                onClick={complete}
+                                            /> 
+                                        </div>
+
+
+                                    </>
+                                ) :
+                                (
+                                    <>
+                                        <div className="w-[375px] h-[36px] flex flex-row justify-start mt-[10px]">
+                                            <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                                                각성제의 종류를 골라주세요.
+                                            </span>
+                                        </div>
+
+                                        <div className="w-[375px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[23px]" />
+
+                                        <NewToggle 
+                                            content="커피" 
+                                            choice={<Coffee/>}
+                                            isOpen={openToggle === 1} 
+                                            onToggle={() => handleToggle(1)}
+                                        />
+                                        <NewToggle 
+                                            content="에너지드링크" 
+                                            choice={<Energy/>}
+                                            isOpen={openToggle === 2} 
+                                            onToggle={() => handleToggle(2)}
+                                        />
+                                        <NewToggle 
+                                            content="기타" 
+                                            choice={<Dessert/>}
+                                            isOpen={openToggle === 3} 
+                                            onToggle={() => handleToggle(3)}
+                                        />
+
+                                        <div className="flex justify-center">
+                                            <div className={ openToggle ? "mt-[163px]": "mt-[354px]" }>
+                                                <Button 
+                                                    backgroundColor= {"#8478F7"} 
+                                                    color={"white"} 
+                                                    content={"완료"}
+                                                    fontStyle={"AppleRegular"}
+                                                    onClick={complete}
+                                                />   
+                                            </div>
+                                        </div>
+                                    </>
+                                )
                         }
-
-                        <div className="w-[375px] h-[72px] flex flex-row justify-start mt-[10px]">
-                            <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
-                                카페인을 기록하기 전에 오늘의 <br/>상태를 알려주세요.
-                            </span>
-                        </div>
-
-                        <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                            <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 나의 컨디션 </span>
-                        </div>
-
-                        {/* 컨디션 체크 버튼 여기서 */}
-                        <div className="w-[375px] h-[60px] flex flex-row justify-center mt-[17px] bg-black">
-
-                        </div>
-
-                        <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                            <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 수면시간 </span>
-                        </div>
-
-                        <div className="w-[375px] h-[44px] flex flex-row justify-start items-center mt-[10px]">
-                            <input
-                                type="text" 
-                                placeholder="시간"
-                                className="ml-[21px] w-[71px] h-[44px] bg-[#EBEBEB] rounded-[10px] 
-                                    text-[#999999] text-[16px] font-AppleMedium text-center"
-                            />
-                            <span className="w-[28px] h-[24px] ml-[5px] text-[16px] font-AppleMedium text-[#5A5A5A]">
-                                시간
-                            </span>
-                        </div>
-
-                        <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                            <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]"> 특이사항 </span>
-                        </div>
-                        <div className="ml-[21px]">
-                            <Significant />
-                        </div>
-
-                        <div className="mt-[46px] flex justify-center">
-                            <Button 
-                                backgroundColor= {"#8478F7"} 
-                                color={"white"} 
-                                content={"계속하기"}
-                            /> 
-                        </div>
-
-
-
-
-
                     </div>
-
-
-
-                    
-                    
                 </div>
-
-
             </section>
-
         </>
     );
 };

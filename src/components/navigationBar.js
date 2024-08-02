@@ -60,7 +60,7 @@ const NavigationBar = ({ page }) => {
 const NavButton = ({ onClick, imgSrc, altText, label }) => (
     <button className="w-[93.75px] flex flex-col justify-center items-center" onClick={onClick}>
         <img src={imgSrc} alt={altText} />
-        <span className="font-[AppleReBold] text-[10px]">{label}</span>
+        <span className="font-AppleRegular text-[10px]">{label}</span>
     </button>
 );
 
