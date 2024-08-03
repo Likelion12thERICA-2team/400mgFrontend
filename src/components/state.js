@@ -41,14 +41,13 @@ const State = () => {
   const [isThirdTab, setIsThirdTab] = useState(false);
 
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
-  const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
 
-  const [currCaffeine, setCurrCaffeine] = useState(0); // 현재 카페인 섭취량
+  const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
 
   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
   const dummyCaffeineData = Array(145)
     .fill(0)
-    .map(() => Math.random() * 100);
+    .map(() => Math.random() * 400);
 
   // 토글 버튼 클릭 시 호출되는 함수
   const handleToggle = (index) => {
@@ -59,7 +58,6 @@ const State = () => {
   const inputRef = useRef(null);
 
   //임의의 카페인 섭취량
-  const caffeineAmount = 600;
 
   // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
   useEffect(() => {
@@ -87,7 +85,7 @@ const State = () => {
         for (let i = 0; i < response.data.length; i++) {
           sum += response.data[i].amount;
         }
-        setCurrCaffeine(sum);
+        setCaffeineAmount(sum);
       })
       .catch((error) => {
         console.log(error);
@@ -407,9 +405,12 @@ const State = () => {
                   <span className="h-[20px] font-[AppleMedium] text-[14px] text-[#999999]">
                     지금까지 마신 카페인
                   </span>
-                  <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    {currCaffeine} / 400mg
-                  </span>
+                    <span className="h-[25px] font-[AppleMedium] text-[18px] mt-[6px]">
+                        <span className={`${caffeineAmount >= 400 ? 'text-[#FF3B30]' : 'text-[#222222]'}`}>
+                            {caffeineAmount}
+                        </span>
+                        <span className="text-[#222222]"> / 400mg</span>
+                    </span>
                 </div>
 
                 <div className="h-[59px] border-[0.75px] border-[#999999]" />
