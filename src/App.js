@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./components/layout";
 
 import Splash from "./container/splash";
 import StartMain from "./container/startMain";
