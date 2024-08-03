@@ -34,9 +34,15 @@ const handleSubmit = async (e) => {
     password: "password",
   };
 
+  const access_token = localStorage.getItem("access_token");
+
   try {
     //API 요청
-    const response = await apiClient.post("users/", data);
+    const response = await apiClient.post("users/", data, {
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    });
     console.log(response);
   } catch (error) {
     console.error(error);

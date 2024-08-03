@@ -24,6 +24,8 @@ import Dessert from "./dessert";
 import ButtonGroup from "./buttonGroup";
 import CaffeineGraph from "./caffeineGraph";
 
+import axios from "axios";
+
 const State = () => {
   const [num, setNum] = useState(0); // 상태
   const [miniBg, setMiniBg] = useState(""); // 작은 블럭 색
@@ -40,6 +42,8 @@ const State = () => {
 
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
   const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
+
+  const [currCaffeine, setCurrCaffeine] = useState(0); // 현재 카페인 섭취량
 
   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
   const dummyCaffeineData = Array(145)
@@ -62,15 +66,15 @@ const State = () => {
     caffeine2state(caffeineAmount);
   }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
 
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyNTA0NTU2LCJpYXQiOjE3MjI1MDMzMTEsImp0aSI6ImU2YTdiZWE3MTAzZTRmM2Y5NDU5NzI0MTE1NmQ0MzQ5IiwidXNlcl9pZCI6N30.HyafhvXmImo2EHs-kUP26t_El-etClL8dVcjY4j5WCk";
+  const access_token = localStorage.getItem("access_token");
+
   const GetCaffeine = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "http://127.0.0.1:8000/caffeinintakes/",
+      url: "http://13.209.186.104/caffeinintakes/",
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + access_token,
       },
     };
 
