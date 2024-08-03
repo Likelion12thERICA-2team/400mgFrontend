@@ -2,11 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import Button from "./Button";
 // import axios from "axios";
 import apiClient from "../apiClient";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     const data = {
@@ -21,6 +24,9 @@ const Login = () => {
       console.log(response);
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
+      if (response.status === 200) {
+        navigate("/start/loading");
+      }
     } catch (error) {
       console.error(error);
     }
