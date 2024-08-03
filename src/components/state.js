@@ -25,6 +25,7 @@ import ButtonGroup from "./buttonGroup";
 import CaffeineGraph from "./caffeineGraph";
 
 import axios from "axios";
+import moment from 'moment';
 
 const State = () => {
   const [num, setNum] = useState(0); // 상태
@@ -43,25 +44,20 @@ const State = () => {
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
 
   const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
+  const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
+  
+  const inputRef = useRef(null);
 
   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
   const dummyCaffeineData = Array(145)
     .fill(0)
     .map(() => Math.random() * 400);
 
-  // 토글 버튼 클릭 시 호출되는 함수
-  const handleToggle = (index) => {
-    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
-    setOpenToggle(openToggle === index ? null : index);
-  };
-
-  const inputRef = useRef(null);
-
-  //임의의 카페인 섭취량
-
   // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
   useEffect(() => {
     caffeine2state(caffeineAmount);
+    GetCaffeine();
+    getLastCaffeineIntake();
   }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
 
   const access_token = localStorage.getItem("access_token");
@@ -92,9 +88,48 @@ const State = () => {
       });
   };
 
-  useEffect(() => {
-    GetCaffeine();
-  }, []);
+  const getLastCaffeineIntake = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "http://13.209.186.104/caffeinintakes/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios.request(config)
+      .then((response) => {
+        if (response.data.length > 0) {
+          // 가장 최근의 카페인 섭취 시간 찾기
+          const latestIntake = response.data.reduce((latest, current) => 
+            moment(current.time).isAfter(moment(latest.time)) ? current : latest
+          );
+          setLastIntakeTime(moment(latestIntake.time));
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getTimeDifference = () => {
+    if (!lastIntakeTime) return "데이터 없음";
+
+    const now = moment();
+    const duration = moment.duration(now.diff(lastIntakeTime));
+    const minutes = duration.asMinutes();
+
+    if (minutes < 60) {
+      return `${Math.floor(minutes)}분`;
+    } else if (minutes < 24 * 60) {
+      return `${Math.floor(duration.asHours())}시간`;
+    } else if (minutes < 7 * 24 * 60) {
+      return `${Math.floor(duration.asDays())}일`;
+    } else {
+      return `${Math.floor(duration.asWeeks())}주`;
+    }
+  };
 
   const toggleBox = () => {
     if (caffeineAmount >= 400) {
@@ -335,6 +370,12 @@ const State = () => {
     }
   };
 
+  // 토글 버튼 클릭 시 호출되는 함수
+  const handleToggle = (index) => {
+    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
+    setOpenToggle(openToggle === index ? null : index);
+  };
+
   return (
     <>
       <section className="flex justify-start">
@@ -420,7 +461,7 @@ const State = () => {
                     마지막으로 마신지
                   </span>
                   <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    2일
+                    {getTimeDifference()}
                   </span>
                 </div>
               </div>
