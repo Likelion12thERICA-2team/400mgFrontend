@@ -1,9 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout";
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Layout from "./components/layout";
 
 import Splash from "./container/splash";
 import StartMain from "./container/startMain";
@@ -18,6 +15,7 @@ import Main from "./container/main";
 import Report from "./container/report";
 import Mypages from "./container/myPage";
 import Login from "./components/login";
+import Community from "./container/community";
 
 function App() {
   return (
@@ -37,6 +35,7 @@ function App() {
           <Route path="/start/loading" element={<Loading />}></Route>
           <Route path="/main" element={<Main />}></Route>
           <Route path="/report" element={<Report />}></Route>
+          <Route path="/community" element={<Community />}></Route>
           <Route path="/mypage" element={<Mypages />}></Route>
         </Routes>
         {/* </Layout> */}

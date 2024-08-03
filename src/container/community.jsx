@@ -1,6 +1,6 @@
 import Post from "../components/Feed";
 
-const community = () => {
+const Community = () => {
   return (
     <div className="">
       <main className="">
@@ -12,4 +12,4 @@ const community = () => {
   );
 };
 
-export default community;
+export default Community;
