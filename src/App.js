@@ -13,7 +13,7 @@ import Loading from "./container/loading";
 import SignUp3 from "./container/signUp3";
 import Main from "./container/main";
 import Report from "./container/report";
-import Mypages from "./container/myPage";
+// import Mypages from "./container/myPage";
 import Login from "./components/login";
 
 function App() {
