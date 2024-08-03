@@ -4,6 +4,7 @@ import circle from "../assets/graphCircle.png"
 const CaffeineGraph = ({ caffeineData }) => {
 
     const [currentIndex, setCurrentIndex] = useState(71); // 현재 시간을 나타내는 인덱스
+    const maxCaffeineValue = Math.max(...caffeineData) * 1.5;
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -36,11 +37,11 @@ const CaffeineGraph = ({ caffeineData }) => {
     //     return path;
     // };
     const getGraphPath = () => {
-        let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / 400) * 31} `;
+        let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 31} `;
         for (let i = 1; i < 31; i++) {
             const dataIndex = (currentIndex - 36 + i + 145) % 145;
             const x = (i / 30) * 375;
-            const y = 73 - (caffeineData[dataIndex] / 400) * 73;
+            const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
             path += `L${x},${y} `;
         }
         path += 'L375,73 L0,73 Z';
@@ -51,7 +52,7 @@ const CaffeineGraph = ({ caffeineData }) => {
     // const currentY = 73 - (currentCaffeineLevel / 100) * 73;
     const dataIndex = (currentIndex - 36 + 15 + 145) % 145;
     const currentCaffeineLevel = caffeineData[dataIndex];
-    const currentY = 73 - (currentCaffeineLevel / 400) * 73;
+    const currentY = 73 - (currentCaffeineLevel / maxCaffeineValue) * 73;
 
     return (
         <div className="w-[375px]">

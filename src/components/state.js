@@ -45,6 +45,7 @@ const State = () => {
 
   const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
   const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
+  const [caffeineData, setCaffeineData] = useState(Array(145).fill(0)); //체내 카페인 수치 계산된 배열
   
   const inputRef = useRef(null);
 
@@ -53,12 +54,7 @@ const State = () => {
     .fill(0)
     .map(() => Math.random() * 400);
 
-  // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
-  useEffect(() => {
-    caffeine2state(caffeineAmount);
-    GetCaffeine();
-    getLastCaffeineIntake();
-  }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+
 
   const access_token = localStorage.getItem("access_token");
 
@@ -85,6 +81,8 @@ const State = () => {
       })
       .catch((error) => {
         console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineAmount(0);
       });
   };
 
@@ -130,6 +128,41 @@ const State = () => {
       return `${Math.floor(duration.asWeeks())}주`;
     }
   };
+
+  const getCaffeineData = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "http://13.209.186.104/caffeinintakes/predict/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        // API에서 받아온 데이터를 caffeineData 상태에 설정
+        setCaffeineData(response.data);
+        // 현재 카페인 섭취량 계산 (배열의 첫 번째 요소)
+        // setCaffeineAmount(Math.round(response.data[0]));
+      })
+      .catch((error) => {
+        console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineData(Array(145).fill(0));
+        // setCaffeineAmount(0);
+      });
+  };
+
+    // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
+    useEffect(() => {
+        caffeine2state(caffeineAmount);
+        GetCaffeine();
+        getLastCaffeineIntake();
+        getCaffeineData();
+      }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+
 
   const toggleBox = () => {
     if (caffeineAmount >= 400) {
@@ -485,7 +518,7 @@ const State = () => {
 
               {/* 여기서 [그래프 + 선 + 시간] 들어가기 */}
 
-              <CaffeineGraph caffeineData={dummyCaffeineData} />
+              <CaffeineGraph caffeineData={caffeineData} />
 
               {/* <div className="w-[375px] h-[73px] ">
                                 
