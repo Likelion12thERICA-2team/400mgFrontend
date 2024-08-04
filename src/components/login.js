@@ -1,25 +1,22 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState } from "react";
 import Button from "./Button";
-// import axios from "axios";
 import apiClient from "../apiClient";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     const data = {
-      //   username: username,
       email: email,
       password: password,
     };
 
     try {
-      //API 요청
       const response = await apiClient.post("users/token/", data);
       console.log(response);
       localStorage.setItem("access_token", response.data.access);
@@ -29,6 +26,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error(error);
+      setErrorMessage("이메일 혹은 비밀번호를 다시 확인해주세요.");
     }
   };
 
@@ -40,32 +38,38 @@ const Login = () => {
           로그인하기 위한 회원정보를 입력해주세요
         </span>
       </div>
-      <div>
-        <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px] ml-[119px]">
+      <div className="flex flex-col items-center">
+        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px]">
           이메일
         </div>
 
         <input
           type="text"
-          className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[10px] text-[22px]"
+          className="w-[267px] h-[44px] font-AppleMedium text-center mt-[10px] text-[22px]"
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[34px]"></div>
-        <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px] ml-[135px]">
+        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
+        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px]">
           비밀번호
         </div>
 
         <input
-          type="text"
-          className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[10px] text-[22px]"
+          type="password"
+          className="w-[267px] h-[44px] font-AppleMedium text-center mt-[10px] text-[22px]"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[34px]"></div>
+        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
       </div>
 
+      {errorMessage && (
+        <div className="text-center text-[#ff0000] font-AppleMedium text-[16px] mt-[30px]">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="absolute bottom-[32px] w-full flex">
-        <div className=" w-full max-w-md">
+        <div className="w-full max-w-md">
           <Button
             backgroundColor="#8478F7"
             color="white"

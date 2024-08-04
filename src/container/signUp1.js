@@ -8,8 +8,6 @@ import SetNickname from "../components/setNickname";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import apiClient from "../apiClient";
-
 const SignUp1 = () => {
   const [step, setStep] = useState(1);
   const [formdata, setFormdata] = useState({
@@ -24,8 +22,11 @@ const SignUp1 = () => {
     height: "",
     weight: "",
     username: "",
+    email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
     setFormdata((prevdata) => ({
@@ -34,7 +35,6 @@ const SignUp1 = () => {
     }));
   };
 
-  // 테스트 for formdata
   useEffect(() => {
     console.log(formdata);
   }, [formdata]);
@@ -46,47 +46,6 @@ const SignUp1 = () => {
   const prevStep = () => {
     setStep((prevStep) => prevStep - 1);
   };
-
-  const navigate = useNavigate();
-
-  const handleSignUp = async () => {
-    let gender = formdata.gender;
-    if (gender === "남성") gender = "M";
-    else if (gender === "여성") gender = "F";
-    else gender = "E";
-
-    const birth_date = `${formdata.year}-${formdata.month.padStart(
-      2,
-      "0"
-    )}-${formdata.day.padStart(2, "0")}`;
-
-    try {
-      const data = {
-        username: formdata.username,
-        email: formdata.username,
-        password: formdata.password,
-        gender: gender,
-        birth_date: birth_date,
-        height: formdata.height,
-        weight: formdata.weight,
-        disease: "None",
-      };
-
-      const response = await apiClient.post("users/", data);
-      console.log(response);
-      if (response.status === 201) {
-        localStorage.setItem("access_token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
-        navigate("/start/loading");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    handleSignUp();
-  }, [formdata.password]);
 
   return (
     <div className="">
@@ -106,7 +65,11 @@ const SignUp1 = () => {
             <HealthCheck handle={handleInputChange} onNext={nextStep} />
           )}
           {step === 6 && (
-            <SetNickname handle={handleInputChange} onNext={handleSignUp} />
+            <SetNickname
+              formdata={formdata}
+              handle={handleInputChange}
+              navigate={navigate}
+            />
           )}
         </div>
       </main>
