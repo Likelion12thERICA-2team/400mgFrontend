@@ -25,6 +25,7 @@ import ButtonGroup from "./buttonGroup";
 import CaffeineGraph from "./caffeineGraph";
 
 import axios from "axios";
+import moment from 'moment';
 
 const State = () => {
   const [num, setNum] = useState(0); // 상태
@@ -41,30 +42,20 @@ const State = () => {
   const [isThirdTab, setIsThirdTab] = useState(false);
 
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
-  const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
+  const [selectedItems, setSelectedItems] = useState([]); //카페인 양
+  const [caffeineType, setCaffeineType] = useState(''); //카페인 종류
 
-  const [currCaffeine, setCurrCaffeine] = useState(0); // 현재 카페인 섭취량
-
-  // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
-  const dummyCaffeineData = Array(145)
-    .fill(0)
-    .map(() => Math.random() * 100);
-
-  // 토글 버튼 클릭 시 호출되는 함수
-  const handleToggle = (index) => {
-    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
-    setOpenToggle(openToggle === index ? null : index);
-  };
-
+  const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
+  const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
+  const [caffeineData, setCaffeineData] = useState(Array(145).fill(0)); //체내 카페인 수치 계산된 배열
+  const [inputAmount, setInputAmount] = useState(''); // 사용자 입력 카페인 양
+  
   const inputRef = useRef(null);
 
-  //임의의 카페인 섭취량
-  const caffeineAmount = 600;
-
-  // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
-  useEffect(() => {
-    caffeine2state(caffeineAmount);
-  }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+//   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
+//   const dummyCaffeineData = Array(145)
+//     .fill(0)
+//     .map(() => Math.random() * 400);
 
   const access_token = localStorage.getItem("access_token");
 
@@ -83,20 +74,169 @@ const State = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         let sum = 0;
+        let latestIntakeTime = null;
 
-        for (let i = 0; i < response.data.length; i++) {
-          sum += response.data[i].amount;
+        // 가장 최근의 섭취 시간 찾기
+        response.data.forEach(intake => {
+            const intakeTime = moment(intake.time);
+            if (!latestIntakeTime || intakeTime.isAfter(latestIntakeTime)) {
+              latestIntakeTime = intakeTime;
+            }
+        });
+
+        // 24시간 이내의 섭취량만 합산
+        response.data.forEach(intake => {
+            const intakeTime = moment(intake.time);
+            if (latestIntakeTime.diff(intakeTime, 'hours') <= 24) {
+              sum += intake.amount;
+            }
+        });
+
+
+
+        // for (let i = 0; i < response.data.length; i++) {
+        //   sum += response.data[i].amount;
+        // }
+
+
+        
+        setCaffeineAmount(sum);
+      })
+      .catch((error) => {
+        console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineAmount(0);
+      });
+  };
+
+  const getLastCaffeineIntake = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "http://13.209.186.104/caffeinintakes/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios.request(config)
+      .then((response) => {
+        if (response.data.length > 0) {
+          // 가장 최근의 카페인 섭취 시간 찾기
+          const latestIntake = response.data.reduce((latest, current) => 
+            moment(current.time).isAfter(moment(latest.time)) ? current : latest
+          );
+          setLastIntakeTime(moment(latestIntake.time));
         }
-        setCurrCaffeine(sum);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const getTimeDifference = () => {
+    if (!lastIntakeTime) return "데이터 없음";
+
+    const now = moment();
+    const duration = moment.duration(now.diff(lastIntakeTime));
+    const minutes = duration.asMinutes();
+
+    if (minutes < 60) {
+      return `${Math.floor(minutes)}분`;
+    } else if (minutes < 24 * 60) {
+      return `${Math.floor(duration.asHours())}시간`;
+    } else if (minutes < 7 * 24 * 60) {
+      return `${Math.floor(duration.asDays())}일`;
+    } else {
+      return `${Math.floor(duration.asWeeks())}주`;
+    }
+  };
+
+  const getCaffeineData = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "http://13.209.186.104/caffeinintakes/predict/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        // API에서 받아온 데이터를 caffeineData 상태에 설정
+        setCaffeineData(response.data);
+        // 현재 카페인 섭취량 계산 (배열의 첫 번째 요소)
+        // setCaffeineAmount(Math.round(response.data[0]));
+      })
+      .catch((error) => {
+        console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineData(Array(145).fill(0));
+        // setCaffeineAmount(0);
+      });
+  };
+
+  const handleInputChange = (e) => {
+    setInputAmount(e.target.value);
+  };
+
+  const complete = () => {
+    const amount = parseInt(inputAmount, 10);
+    if (isNaN(amount)) {
+      alert('올바른 숫자를 입력해주세요.');
+      return;
+    }
+
+    const data = {
+      time: new Date().toISOString(),
+      amount: amount,
+      caffeinType: "커피" // 기본값으로 "커피"를 설정했습니다. 필요에 따라 수정하세요.
+    };
+
+    console.log("전송할 데이터:", data);  // 전송할 데이터 로깅
+
+    axios.post('http://13.209.186.104/caffeinintakes/', data, {
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('카페인 섭취 기록 성공:', response.data);
+      setInputAmount('');
+      GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+      getLastCaffeineIntake();
+    })
+    .catch(error => {
+        console.error('카페인 섭취 기록 실패:', error.response ? error.response.data : error.message);
+        alert('카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요.');
+    });
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+
+
+  };
+
+
   useEffect(() => {
-    GetCaffeine();
+    getLastCaffeineIntake(); // 초기 데이터 로드
+    const interval = setInterval(getLastCaffeineIntake, 60000); // 1분마다 호출
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
   }, []);
+
+    // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
+    useEffect(() => {
+        caffeine2state(caffeineAmount);
+        GetCaffeine();
+        getCaffeineData();
+      }, [caffeineAmount]); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+
 
   const toggleBox = () => {
     if (caffeineAmount >= 400) {
@@ -108,32 +248,12 @@ const State = () => {
 
   const noBox = () => {
     setIsBoxVisible(!isBoxVisible);
-    console.log(isFirstTab);
   };
 
   const yesBox = () => {
     setIsBoxVisible(!isBoxVisible);
     setIsRecordVisible(!isRecordVisible);
   };
-
-  const complete = () => {
-    setIsRecordVisible(!isRecordVisible);
-    setIsFirstTab(true);
-    setIsSecondTab(false);
-    setIsThirdTab(false);
-  };
-
-  useEffect(() => {
-    console.log("Updated isFirstTab:", isFirstTab);
-  }, [isFirstTab]);
-
-  useEffect(() => {
-    console.log("Updated isSecondTab:", isSecondTab);
-  }, [isSecondTab]);
-
-  useEffect(() => {
-    console.log("Updated isThirdTab:", isThirdTab);
-  }, [isThirdTab]);
 
   const firstTab = () => {
     setIsFirstTab(!isFirstTab);
@@ -337,6 +457,62 @@ const State = () => {
     }
   };
 
+  // 토글 버튼 클릭 시 호출되는 함수
+  const handleToggle = (index) => {
+    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
+    setOpenToggle(openToggle === index ? null : index);
+    setCaffeineType(index === 1 ? '커피' : index === 2 ? '에너지드링크' : '기타');
+  };
+
+  const handleItemSelect = (item) => {
+    setSelectedItems(prevItems => {
+      const itemIndex = prevItems.findIndex(i => i.name === item.name);
+      if (itemIndex > -1) {
+        return prevItems.filter(i => i.name !== item.name);
+      } else {
+        return [...prevItems, item];
+      }
+    });
+  };
+
+  const tcomplete = () => {
+    selectedItems.forEach(item => {
+      const data = {
+        time: new Date().toISOString(),
+        amount: item.caffeine,
+        caffeinType: caffeineType
+      };
+
+      axios.post('http://13.209.186.104/caffeinintakes/', data, {
+        headers: {
+          'Authorization': 'Bearer ' + access_token,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('카페인 섭취 기록 성공:', response.data);
+        GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+        getLastCaffeineIntake();
+      })
+      .catch(error => {
+        console.error('카페인 섭취 기록 실패:', error.response ? error.response.data : error.message);
+        alert('카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요.');
+      });
+    });
+
+    // 기록 후 상태 초기화
+    setSelectedItems([]);
+    setOpenToggle(0);
+    setCaffeineType('');
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+  };
+
+
+
   return (
     <>
       <section className="flex justify-start">
@@ -407,9 +583,12 @@ const State = () => {
                   <span className="h-[20px] font-[AppleMedium] text-[14px] text-[#999999]">
                     지금까지 마신 카페인
                   </span>
-                  <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    {currCaffeine} / 400mg
-                  </span>
+                    <span className="h-[25px] font-[AppleMedium] text-[18px] mt-[6px]">
+                        <span className={`${caffeineAmount >= 400 ? 'text-[#FF3B30]' : 'text-[#222222]'}`}>
+                            {caffeineAmount}
+                        </span>
+                        <span className="text-[#222222]"> / 400mg</span>
+                    </span>
                 </div>
 
                 <div className="h-[59px] border-[0.75px] border-[#999999]" />
@@ -419,7 +598,7 @@ const State = () => {
                     마지막으로 마신지
                   </span>
                   <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    2일
+                    {getTimeDifference()}
                   </span>
                 </div>
               </div>
@@ -443,7 +622,7 @@ const State = () => {
 
               {/* 여기서 [그래프 + 선 + 시간] 들어가기 */}
 
-              <CaffeineGraph caffeineData={dummyCaffeineData} />
+              <CaffeineGraph caffeineData={caffeineData} />
 
               {/* <div className="w-[375px] h-[73px] ">
                                 
@@ -501,7 +680,9 @@ const State = () => {
               <div className="text-[20px] font-[AppleBold] text-[#222222] mt-[19px] flex flex-col justify-center items-center">
                 <div> 오늘의 카페인 할당량을 </div>
                 <div>
-                  <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요.
+                  {/* <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요. */}
+                    <span className="text-[#FF3B30]">{caffeineAmount-400}</span>
+                    <span className="text-[#FF3B30]">mg</span> 이나 초과했어요.
                 </div>
               </div>
               <div className="font-AppleRegular text-[#222222] text-[16px] mt-[12px]">
@@ -733,6 +914,8 @@ const State = () => {
                   <input
                     type="text"
                     placeholder="카페인"
+                    value={inputAmount}
+                    onChange={handleInputChange}
                     className="w-[106px] h-[24px] font-AppleMedium text-right border-b border-[#999999] text-[16px]"
                   />
                   <input
@@ -766,19 +949,19 @@ const State = () => {
 
                 <NewToggle
                   content="커피"
-                  choice={<Coffee />}
+                  choice={<Coffee onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 1}
                   onToggle={() => handleToggle(1)}
                 />
                 <NewToggle
                   content="에너지드링크"
-                  choice={<Energy />}
+                  choice={<Energy onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 2}
                   onToggle={() => handleToggle(2)}
                 />
                 <NewToggle
                   content="기타"
-                  choice={<Dessert />}
+                  choice={<Dessert onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 3}
                   onToggle={() => handleToggle(3)}
                 />
@@ -790,7 +973,7 @@ const State = () => {
                       color={"white"}
                       content={"완료"}
                       fontStyle={"AppleRegular"}
-                      onClick={complete}
+                      onClick={tcomplete}
                     />
                   </div>
                 </div>
