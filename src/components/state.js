@@ -680,7 +680,9 @@ const State = () => {
               <div className="text-[20px] font-[AppleBold] text-[#222222] mt-[19px] flex flex-col justify-center items-center">
                 <div> 오늘의 카페인 할당량을 </div>
                 <div>
-                  <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요.
+                  {/* <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요. */}
+                    <span className="text-[#FF3B30]">{caffeineAmount-400}</span>
+                    <span className="text-[#FF3B30]">mg</span> 이나 초과했어요.
                 </div>
               </div>
               <div className="font-AppleRegular text-[#222222] text-[16px] mt-[12px]">
