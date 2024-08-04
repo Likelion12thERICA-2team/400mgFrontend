@@ -9,7 +9,7 @@ import arrow_right from "../assets/arrow_right_black.png"
 import neurology from "../assets/neurology.png"
 import coffee from "../assets/coffee.png"
 
-const BottomSheet = ({ date, onClose }) => {
+const BottomSheet = ({ date, onClose, caffeineData }) => {
     const formattedDate = date ? date.toLocaleDateString("ko-KR") : "";
     const [springProps, setSpring] = useSpring(() => ({ y: window.innerHeight }));
     const [caffeineAmount, setCaffeineAmount] = useState(0); 
@@ -28,18 +28,9 @@ const BottomSheet = ({ date, onClose }) => {
         return memo;
     }, { axis: 'y', from: () => [0, springProps.y.get()] });
 
-    const caffeineData = [
-        { date: '7.15', amount: 330, isToday: false },
-        { date: '7.16', amount: 280, isToday: false },
-        { date: '7.17', amount: 20, isToday: false },
-        { date: '7.18', amount: 180, isToday: false },
-        { date: '7.19', amount: 240, isToday: false },
-        { date: '7.20', amount: 120, isToday: false },
-        { date: '7.21', amount: 250, isToday: true },
-    ];
 
     useEffect(() => {
-        const todayData = caffeineData.find(data => data.isToday);
+        const todayData = Array.isArray(caffeineData) && caffeineData.find(data => data.isToday);
         if (todayData) {
             setCaffeineAmount(todayData.amount);
         }
@@ -58,13 +49,13 @@ const BottomSheet = ({ date, onClose }) => {
             </div>
             <div className="flex flex-col justify-center items-start px-[6px] ">
                 <div className="text-[20px] font-AppleSemiBold">{formattedDate} 카페인 섭취량</div>
-            <div className="text-[14px] font-AppleMedium pt-[4px] mb-[9px]">총 {caffeineAmount}mg 섭취했어요. 아메리카노 두잔 정도에요.</div>
+            <div className="text-[14px] font-AppleMedium pt-[4px] mb-[9px]">총 {caffeineAmount}mg 섭취했어요.</div>
             <CaffeineBarGraph caffeineAmount={caffeineAmount} />
             </div>
             <div className="flex flex-col justify-center items-start mt-[37px]">
                 <div className="text-[20px] font-AppleSemiBold">일주일 카페인 분석</div>
-                <div className="text-[14px] font-AppleMedium pt-[4px] mb-[9px]">지금도 좋지만 하루정도 카페인을 쉬어주면 좋을 것 같아요.</div>
-                <WeeklyCaffeineGraph data={caffeineData} />
+                <div className="text-[14px] font-AppleMedium pt-[4px] mb-[9px]"></div>
+                <WeeklyCaffeineGraph data={Array.isArray(caffeineData) ? caffeineData : []} />
             </div>
             <div className="flex flex-col justify-center items-start mt-[33px]">
                 <div className="text-[20px] font-AppleSemiBold">카페인 관리 팁</div>
