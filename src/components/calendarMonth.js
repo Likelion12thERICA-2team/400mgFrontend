@@ -4,6 +4,7 @@ import { format, addMonths, startOfWeek, addDays } from "date-fns";
 import { endOfWeek, isSameDay, isSameMonth } from "date-fns";
 import { startOfMonth, endOfMonth } from "date-fns";
 
+import apiClient from "../apiClient";
 import NavigationBar from "./navigationBar";
 import BottomSheet from "./bottomSheet"
 import SelectedWeek from "./selectWeek";
@@ -48,8 +49,6 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
             const innerDay = day;
 
             const onDateClick2 = () => {
-                console.log("selected day: ", currentMonth, selectedDate)
-                console.log('formatted date, ', formattedDate, innerDay);
                 onDateClick(innerDay);
             }
 
@@ -114,7 +113,7 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
     return <div className="flex flex-col items-center">{rows}</div>;
 };
 
-const Calendar = () => {
+const Calendar =  () => {
     const currentDate = new Date();
     const selectedDate = new Date();  
 
@@ -126,11 +125,14 @@ const Calendar = () => {
 
     const [selectedDay, setSelectedDay] = useState(currentDate);
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(true);
+    const [caffeineData, setCaffeineData] = useState([]);
+    const [rawData, setRawData] = useState({});
 
     const handleDateClick = (date) => {
         console.log('Selected day:', date);
         setSelectedDay(date);
         setBottomSheetVisible(true);
+        processCaffeineData(date);
     };
 
     
@@ -138,6 +140,46 @@ const Calendar = () => {
         setBottomSheetVisible(false);
     };
 
+    useEffect(() => {
+        async function fetchData(){
+            const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODUwMDYzLCJpYXQiOjE3MjI3NjM2NjMsImp0aSI6ImNmZWQ2MGZkNGJiZjRlZjU4NjFiY2JlZWVlNjU2MTk5IiwidXNlcl9pZCI6Mn0.A-5xp36cwJ5jKkmsPCIfhAsU4YxkIezgLuou_N0zmCU"
+        try {
+            //API 요청
+            const response = await apiClient.get("caffeinintakes/monthly/2024/8/", {
+            headers: {
+                Authorization: "Bearer " + access_token,
+            },
+            });
+            console.log(response);
+            setRawData(response.data);
+            processCaffeineData(selectedDate, response.data);
+        } catch (error) {
+            console.error(error);
+        }
+        }
+        fetchData();
+    }, []);
+
+    const processCaffeineData = (date, data = rawData) => {
+        const startOfWeekDate = startOfWeek(date);
+        const weekData = [];
+        
+        for (let i = 0; i < 7; i++) {
+            const currentDate = addDays(startOfWeekDate, i);
+            const formattedDate = format(currentDate, 'M.d');
+            const day = format(currentDate, 'd');
+            const amount = data[day] || 0;
+
+            weekData.push({
+                date: formattedDate,
+                amount: amount,
+                isToday: isSameDay(currentDate, date),
+            });
+        }
+
+        setCaffeineData(weekData);
+    };
+    
 
     for (let i = 0; i < 12; i++) {
         const monthIsSelected = format(currentMonth, "MM") === format(selectedDate, "MM");
@@ -191,7 +233,7 @@ const Calendar = () => {
                 {months}
             </div>
             <NavigationBar page={"report"} />
-            {isBottomSheetVisible && <BottomSheet date={selectedDay} onClose={closeBottomSheet} />}
+            {isBottomSheetVisible && <BottomSheet date={selectedDay} onClose={closeBottomSheet} caffeineData={caffeineData}/>}
         </div>
     );
 };

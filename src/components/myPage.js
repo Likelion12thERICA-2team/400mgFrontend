@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import profile from '../assets/profile.png'
 import article from '../assets/article.png'
@@ -6,25 +6,41 @@ import bookmark from '../assets/bookmark.png'
 import arrow_right_black from "../assets/arrow_right_black.png"
 
 import NavigationBar from './navigationBar';
+import apiClient from '../apiClient';
 
 const Mypage = () => {
 
-    const profileData = [
-        {name: '별다방프로출석러', startdate: '2024.07.01'}
-    ]
+    const [userProfile, setUserProfile] = useState({ username: '', joined_date: '' });
+    const [howmuch, setHowmuch] = useState(0);
 
-    const CurrentDate = () => {
-        const today = new Date();
-        const userProfile = profileData[0];
+    const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODUwMDYzLCJpYXQiOjE3MjI3NjM2NjMsImp0aSI6ImNmZWQ2MGZkNGJiZjRlZjU4NjFiY2JlZWVlNjU2MTk5IiwidXNlcl9pZCI6Mn0.A-5xp36cwJ5jKkmsPCIfhAsU4YxkIezgLuou_N0zmCU"
 
-         // startdate를 Date 객체로 변환
-         const startDate = new Date(userProfile.startdate);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await apiClient.get("mypage/myinfo/", {
+                    headers: {
+                        Authorization: "Bearer " + access_token,
+                    },
+                });
+                const data = response.data;
+                setUserProfile({ username: data.username, joined_date: data.joined_date });
+                calculateDay(data.joined_date);
+            } catch (error) {
+                console.error(error);
+            }
+        };
 
-         // 두 날짜 사이의 차이 계산 (밀리초 단위)
-         const timeDifference = today.getTime() - startDate.getTime();
- 
-         // 차이를 일 단위로 변환
-         const howmuch = Math.floor(timeDifference / (1000 * 3600 * 24));
+        const calculateDay = (joinedDate) => {
+            const today = new Date();
+            const startDate = new Date(joinedDate);
+            const timeDifference = today.getTime() - startDate.getTime();
+            const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+            setHowmuch(daysDifference);
+        };
+
+        fetchData();
+    }, []);
 
 	return(
 		<section className="min-h-screen w-full pt-[26px] pb-[32px] flex flex-col  px-[20px] bg-[#f6f6f6] relative" >
@@ -33,7 +49,7 @@ const Mypage = () => {
                 <div className='flex pt-[28px]' >
                     <img src={profile} className='w-[74px] h-[74px]'></img>
                     <div className='items-start justify-center flex flex-col pl-[26px] gap-[4px]'>
-                        <div className='text-[18px] font-[AppleBold]'>{userProfile.name}</div>
+                        <div className='text-[18px] font-[AppleBold]'>{userProfile.username}</div>
                         <div className='text-[16px] text-[gray] font-[AppleMedium]'>카페인 관리를 시작한지 <span className='text-purple'>{howmuch}일</span> 째</div>
                     </div>
                 </div>
@@ -90,10 +106,7 @@ const Mypage = () => {
             <NavigationBar page={"mypage"} className='absolute'/>
 		</section>
 	    );
-    };
-    return (
-        <CurrentDate />
-    );
+
 };
 
 export default Mypage;
