@@ -685,11 +685,11 @@ const State = () => {
           {/* 경고 슬라이딩 박스 */}
           <div
             className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[30px]
-                            transition-transform duration-300 ease-in-out
+                            transition-transform duration-300 ease-in-out 
                             ${isBoxVisible ? "bottom-0" : "translate-y-full"}`}
             style={{ height: "323px" }}
           >
-            <div className="pt-[35px] flex flex-col justify-center items-center">
+            <div className="pt-[35px] flex flex-col justify-center items-center ">
               <img src={error} alt="경고 표시" className="w-[55px] h-[55px]" />
               <div className="text-[20px] font-[AppleBold] text-[#222222] mt-[19px] flex flex-col justify-center items-center">
                 <div> 오늘의 카페인 할당량을 </div>
@@ -725,7 +725,7 @@ const State = () => {
           {/* 기록 슬라이딩 박스 */}
           <div
             className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[30px]
-                            transition-transform duration-300 ease-in-out
+                            transition-transform duration-300 ease-in-out z-80
                             ${
                               isRecordVisible ? "bottom-0" : "translate-y-full"
                             }`}

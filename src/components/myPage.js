@@ -43,8 +43,8 @@ const Mypage = () => {
     }, []);
 
 	return(
-		<section className="min-h-screen w-full pt-[26px] pb-[32px] flex flex-col  px-[20px] bg-[#f6f6f6] relative" >
-			<div className='text-[18px] font-AppleMedium items-start' >
+		<section className=" h-[800px] w-[375px] pt-[26px] pb-[32px] flex flex-col  bg-[#f6f6f6] relative" >
+			<div className='text-[18px] font-AppleMedium items-start px-[20px] pb-[115px]' >
                 마이페이지
                 <div className='flex pt-[28px]' >
                     <img src={profile} className='w-[74px] h-[74px]'></img>

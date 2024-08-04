@@ -215,7 +215,7 @@ const Calendar =  () => {
     };
 
     return (
-        <div className="flex flex-col items-center font-[AppleRegular] mt-[20px] mb-[32px] mx-[5px] ">
+        <div className="flex flex-col items-center font-[AppleRegular] w-[375px] mt-[20px] mb-[32px] mx-[5px] ">
             <div className="sticky top-0 w-full z-20  bg-white flex flex-col items-center pt-[15px] pb-[10px]">
                 {!isBottomSheetVisible && (
                     <div className="w-[80%] flex justify-between items-baseline text-theme-main-color pb-[10px]">
