@@ -6,7 +6,7 @@ import HealthCheck from "../components/healthCheck";
 import SetNickname from "../components/setNickname";
 
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import apiClient from "../apiClient";
 
@@ -49,15 +49,24 @@ const SignUp1 = () => {
 
   const navigate = useNavigate();
 
-  const handleSingUp = async () => {
+  const handleSignUp = async () => {
+    let gender = formdata.gender;
+    if (gender === "남성") gender = "M";
+    else if (gender === "여성") gender = "F";
+    else gender = "E";
+
+    const birth_date = `${formdata.year}-${formdata.month.padStart(
+      2,
+      "0"
+    )}-${formdata.day.padStart(2, "0")}`;
+
     try {
-      //API 요청
-      let data = {
+      const data = {
         username: formdata.username,
         email: formdata.username,
         password: formdata.password,
-        gender: "M",
-        birth_date: "1990-01-01",
+        gender: gender,
+        birth_date: birth_date,
         height: formdata.height,
         weight: formdata.weight,
         disease: "None",
@@ -65,14 +74,19 @@ const SignUp1 = () => {
 
       const response = await apiClient.post("users/", data);
       console.log(response);
-      // 201이면 성공
       if (response.status === 201) {
+        localStorage.setItem("access_token", response.data.access);
+        localStorage.setItem("refresh_token", response.data.refresh);
         navigate("/start/loading");
       }
     } catch (error) {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    handleSignUp();
+  }, [formdata.password]);
 
   return (
     <div className="">
@@ -92,7 +106,7 @@ const SignUp1 = () => {
             <HealthCheck handle={handleInputChange} onNext={nextStep} />
           )}
           {step === 6 && (
-            <SetNickname handle={handleInputChange} onNext={handleSingUp} />
+            <SetNickname handle={handleInputChange} onNext={handleSignUp} />
           )}
         </div>
       </main>

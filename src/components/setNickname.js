@@ -10,7 +10,6 @@ const SetNickname = ({ handle, onNext }) => {
   const handleSubmit = () => {
     handle("username", nickname);
     handle("password", password);
-    onNext();
   };
 
   return (
@@ -47,7 +46,7 @@ const SetNickname = ({ handle, onNext }) => {
           backgroundColor={"#8478F7"}
           color={"white"}
           content={"완료"}
-          link="/start/loading"
+          // link="/start/loading"
           onClick={handleSubmit}
         />
       </div>
