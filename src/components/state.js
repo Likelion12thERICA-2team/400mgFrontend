@@ -31,6 +31,7 @@ import apiClient from "../apiClient";
 
 const State = () => {
   const [num, setNum] = useState(0); // 상태
+  const [username, setUsername] = useState(""); // 유저 이름
   const [miniBg, setMiniBg] = useState(""); // 작은 블럭 색
   const [state, setState] = useState(""); // 상태 문구
   const [wordColor, setWordColor] = useState(""); // 글자색
@@ -47,7 +48,8 @@ const State = () => {
   const [selectedItems, setSelectedItems] = useState([]); //카페인 양
   const [caffeineType, setCaffeineType] = useState(""); //카페인 종류
 
-  const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
+  const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재까지의 카페인 섭취량
+  const [currCaffineAmount, setCurrCaffeineAmount] = useState(0); // 현재 카페인 흡수량
   const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
   const [caffeineData, setCaffeineData] = useState(Array(145).fill(0)); //체내 카페인 수치 계산된 배열
   const [inputAmount, setInputAmount] = useState(""); // 사용자 입력 카페인 양
@@ -233,6 +235,25 @@ const State = () => {
     return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
   }, []);
 
+  //유저 이름 받아오기
+  const fetchUser = async () => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      const response = await apiClient.get("mypage/myinfo/", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
   useEffect(() => {
     caffeine2state(caffeineAmount);
@@ -397,15 +418,15 @@ const State = () => {
   const getHello1 = () => {
     switch (num) {
       case 1:
-        return <> 오랜만이에요 커피중독님! </>; //양호
+        return <> 오랜만이에요 {username}님! </>; //양호
       case 2:
-        return <> 커피중독님, 오늘도 화이팅이에요! </>; // 보통
+        return <> {username}님, 오늘도 화이팅이에요! </>; // 보통
       case 3:
-        return <> 커피중독님, 잠은 좀 깨셨나요? </>; // 집중
+        return <> {username}님, 잠은 좀 깨셨나요? </>; // 집중
       case 4:
-        return <> 오랜만이에요 커피중독님! </>; // 각성
+        return <> 오랜만이에요 {username}님! </>; // 각성
       case 5:
-        return <> 오랜만이에요 커피중독님! </>; // 과잉
+        return <> 오랜만이에요 {username}님! </>; // 과잉
       case 6:
         return <> 더이상 카페인은 힘들어요. </>; // 한계
       default:
