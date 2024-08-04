@@ -42,19 +42,20 @@ const State = () => {
   const [isThirdTab, setIsThirdTab] = useState(false);
 
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
+  const [selectedItems, setSelectedItems] = useState([]); //카페인 양
+  const [caffeineType, setCaffeineType] = useState(''); //카페인 종류
 
   const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재 카페인 섭취량
   const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
   const [caffeineData, setCaffeineData] = useState(Array(145).fill(0)); //체내 카페인 수치 계산된 배열
+  const [inputAmount, setInputAmount] = useState(''); // 사용자 입력 카페인 양
   
   const inputRef = useRef(null);
 
-  // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
-  const dummyCaffeineData = Array(145)
-    .fill(0)
-    .map(() => Math.random() * 400);
-
-
+//   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
+//   const dummyCaffeineData = Array(145)
+//     .fill(0)
+//     .map(() => Math.random() * 400);
 
   const access_token = localStorage.getItem("access_token");
 
@@ -73,10 +74,32 @@ const State = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         let sum = 0;
+        let latestIntakeTime = null;
 
-        for (let i = 0; i < response.data.length; i++) {
-          sum += response.data[i].amount;
-        }
+        // 가장 최근의 섭취 시간 찾기
+        response.data.forEach(intake => {
+            const intakeTime = moment(intake.time);
+            if (!latestIntakeTime || intakeTime.isAfter(latestIntakeTime)) {
+              latestIntakeTime = intakeTime;
+            }
+        });
+
+        // 24시간 이내의 섭취량만 합산
+        response.data.forEach(intake => {
+            const intakeTime = moment(intake.time);
+            if (latestIntakeTime.diff(intakeTime, 'hours') <= 24) {
+              sum += intake.amount;
+            }
+        });
+
+
+
+        // for (let i = 0; i < response.data.length; i++) {
+        //   sum += response.data[i].amount;
+        // }
+
+
+        
         setCaffeineAmount(sum);
       })
       .catch((error) => {
@@ -155,13 +178,64 @@ const State = () => {
       });
   };
 
+  const handleInputChange = (e) => {
+    setInputAmount(e.target.value);
+  };
+
+  const complete = () => {
+    const amount = parseInt(inputAmount, 10);
+    if (isNaN(amount)) {
+      alert('올바른 숫자를 입력해주세요.');
+      return;
+    }
+
+    const data = {
+      time: new Date().toISOString(),
+      amount: amount,
+      caffeinType: "커피" // 기본값으로 "커피"를 설정했습니다. 필요에 따라 수정하세요.
+    };
+
+    console.log("전송할 데이터:", data);  // 전송할 데이터 로깅
+
+    axios.post('http://13.209.186.104/caffeinintakes/', data, {
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('카페인 섭취 기록 성공:', response.data);
+      setInputAmount('');
+      GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+      getLastCaffeineIntake();
+    })
+    .catch(error => {
+        console.error('카페인 섭취 기록 실패:', error.response ? error.response.data : error.message);
+        alert('카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요.');
+    });
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+
+
+  };
+
+
+  useEffect(() => {
+    getLastCaffeineIntake(); // 초기 데이터 로드
+    const interval = setInterval(getLastCaffeineIntake, 60000); // 1분마다 호출
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
+  }, []);
+
     // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
     useEffect(() => {
         caffeine2state(caffeineAmount);
         GetCaffeine();
-        getLastCaffeineIntake();
         getCaffeineData();
-      }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+      }, [caffeineAmount]); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
 
 
   const toggleBox = () => {
@@ -174,32 +248,12 @@ const State = () => {
 
   const noBox = () => {
     setIsBoxVisible(!isBoxVisible);
-    console.log(isFirstTab);
   };
 
   const yesBox = () => {
     setIsBoxVisible(!isBoxVisible);
     setIsRecordVisible(!isRecordVisible);
   };
-
-  const complete = () => {
-    setIsRecordVisible(!isRecordVisible);
-    setIsFirstTab(true);
-    setIsSecondTab(false);
-    setIsThirdTab(false);
-  };
-
-  useEffect(() => {
-    console.log("Updated isFirstTab:", isFirstTab);
-  }, [isFirstTab]);
-
-  useEffect(() => {
-    console.log("Updated isSecondTab:", isSecondTab);
-  }, [isSecondTab]);
-
-  useEffect(() => {
-    console.log("Updated isThirdTab:", isThirdTab);
-  }, [isThirdTab]);
 
   const firstTab = () => {
     setIsFirstTab(!isFirstTab);
@@ -407,7 +461,57 @@ const State = () => {
   const handleToggle = (index) => {
     // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
     setOpenToggle(openToggle === index ? null : index);
+    setCaffeineType(index === 1 ? '커피' : index === 2 ? '에너지드링크' : '기타');
   };
+
+  const handleItemSelect = (item) => {
+    setSelectedItems(prevItems => {
+      const itemIndex = prevItems.findIndex(i => i.name === item.name);
+      if (itemIndex > -1) {
+        return prevItems.filter(i => i.name !== item.name);
+      } else {
+        return [...prevItems, item];
+      }
+    });
+  };
+
+  const tcomplete = () => {
+    selectedItems.forEach(item => {
+      const data = {
+        time: new Date().toISOString(),
+        amount: item.caffeine,
+        caffeinType: caffeineType
+      };
+
+      axios.post('http://13.209.186.104/caffeinintakes/', data, {
+        headers: {
+          'Authorization': 'Bearer ' + access_token,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('카페인 섭취 기록 성공:', response.data);
+        GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+        getLastCaffeineIntake();
+      })
+      .catch(error => {
+        console.error('카페인 섭취 기록 실패:', error.response ? error.response.data : error.message);
+        alert('카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요.');
+      });
+    });
+
+    // 기록 후 상태 초기화
+    setSelectedItems([]);
+    setOpenToggle(0);
+    setCaffeineType('');
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+  };
+
+
 
   return (
     <>
@@ -808,6 +912,8 @@ const State = () => {
                   <input
                     type="text"
                     placeholder="카페인"
+                    value={inputAmount}
+                    onChange={handleInputChange}
                     className="w-[106px] h-[24px] font-AppleMedium text-right border-b border-[#999999] text-[16px]"
                   />
                   <input
@@ -841,19 +947,19 @@ const State = () => {
 
                 <NewToggle
                   content="커피"
-                  choice={<Coffee />}
+                  choice={<Coffee onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 1}
                   onToggle={() => handleToggle(1)}
                 />
                 <NewToggle
                   content="에너지드링크"
-                  choice={<Energy />}
+                  choice={<Energy onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 2}
                   onToggle={() => handleToggle(2)}
                 />
                 <NewToggle
                   content="기타"
-                  choice={<Dessert />}
+                  choice={<Dessert onSelect={handleItemSelect}/>}
                   isOpen={openToggle === 3}
                   onToggle={() => handleToggle(3)}
                 />
@@ -865,7 +971,7 @@ const State = () => {
                       color={"white"}
                       content={"완료"}
                       fontStyle={"AppleRegular"}
-                      onClick={complete}
+                      onClick={tcomplete}
                     />
                   </div>
                 </div>
