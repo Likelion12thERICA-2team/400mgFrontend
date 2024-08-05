@@ -26,31 +26,31 @@ const CaffeineGraph = ({ caffeineData }) => {
       .replace(" ", "");
   };
 
-  const getGraphPath = () => {
-    let path = `M0,${
-      73 -
-      (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 73
-    } `;
-    for (let i = 1; i < 73; i++) {
-      const dataIndex = (currentIndex - 36 + i + 145) % 145;
-      const x = (i / 72) * 375;
-      const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
-      path += `L${x},${y} `;
-    }
-    path += "L375,73 L0,73 Z";
-    return path;
-  };
   // const getGraphPath = () => {
-  //     let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 31} `;
-  //     for (let i = 1; i < 31; i++) {
-  //         const dataIndex = (currentIndex - 36 + i + 145) % 145;
-  //         const x = (i / 30) * 375;
-  //         const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
-  //         path += `L${x},${y} `;
-  //     }
-  //     path += 'L375,73 L0,73 Z';
-  //     return path;
+  //   let path = `M0,${
+  //     73 -
+  //     (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 73
+  //   } `;
+  //   for (let i = 1; i < 73; i++) {
+  //     const dataIndex = (currentIndex - 36 + i + 145) % 145;
+  //     const x = (i / 72) * 375;
+  //     const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
+  //     path += `L${x},${y} `;
+  //   }
+  //   path += "L375,73 L0,73 Z";
+  //   return path;
   // };
+  const getGraphPath = () => {
+      let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 31} `;
+      for (let i = 1; i < 31; i++) {
+          const dataIndex = (currentIndex - 36 + i + 145) % 145;
+          const x = (i / 30) * 375;
+          const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
+          path += `L${x},${y} `;
+      }
+      path += 'L375,73 L0,73 Z';
+      return path;
+  };
 
   // const currentCaffeineLevel = caffeineData[currentIndex];
   // const currentY = 73 - (currentCaffeineLevel / 100) * 73;
