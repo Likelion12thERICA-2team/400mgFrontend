@@ -13,6 +13,14 @@ const CaffeineGraph = ({ caffeineData }) => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    console.log('currentIndex :', currentIndex);
+    console.log('caffeineData[currentIndex] :', caffeineData[currentIndex]);
+    console.log('caffeineData :', caffeineData);
+
+
+  }, [currentIndex])
+
   const getTimeLabel = (offset) => {
     const time = new Date();
     time.setMinutes(time.getMinutes() + (offset - 71) * 10);
@@ -41,9 +49,9 @@ const CaffeineGraph = ({ caffeineData }) => {
   //   return path;
   // };
   const getGraphPath = () => {
-      let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 31} `;
+      let path = `M0,${73 - (caffeineData[(currentIndex - 15 + 145) % 145] / maxCaffeineValue) * 73} `;
       for (let i = 1; i < 31; i++) {
-          const dataIndex = (currentIndex - 36 + i + 145) % 145;
+          const dataIndex = (currentIndex - 15 + i + 145) % 145;
           const x = (i / 30) * 375;
           const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
           path += `L${x},${y} `;
@@ -51,12 +59,26 @@ const CaffeineGraph = ({ caffeineData }) => {
       path += 'L375,73 L0,73 Z';
       return path;
   };
+  // const getGraphPath = () => {
+  //     let path = `M0,${73 - (caffeineData[(currentIndex - 36 + 145) % 145] / maxCaffeineValue) * 31} `;
+  //     for (let i = 1; i < 31; i++) {
+  //         const dataIndex = (currentIndex - 36 + i + 145) % 145;
+  //         const x = (i / 30) * 375;
+  //         const y = 73 - (caffeineData[dataIndex] / maxCaffeineValue) * 73;
+  //         path += `L${x},${y} `;
+  //     }
+  //     path += 'L375,73 L0,73 Z';
+  //     return path;
+  // };
 
   // const currentCaffeineLevel = caffeineData[currentIndex];
   // const currentY = 73 - (currentCaffeineLevel / 100) * 73;
-  const dataIndex = (currentIndex - 36 + 15 + 145) % 145;
-  const currentCaffeineLevel = caffeineData[dataIndex];
-  const currentY = 73 - (currentCaffeineLevel / maxCaffeineValue) * 73;
+
+  const currentY = 73 - (caffeineData[(currentIndex + 145) % 145] / maxCaffeineValue) * 73
+
+  // const dataIndex = (currentIndex - 36 + 15 + 145) % 145;
+  // const currentCaffeineLevel = caffeineData[dataIndex];
+  // const currentY = 73 - (currentCaffeineLevel / maxCaffeineValue) * 73;
 
   return (
     <div className="w-[375px]">
