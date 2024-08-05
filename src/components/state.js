@@ -509,7 +509,7 @@ const State = () => {
       };
 
       axios
-        .post("http://13.209.186.104/caffeinintakes/", data, {
+        .post("https://400mg.duckdns.org/caffeinintakes/", data, {
           headers: {
             Authorization: "Bearer " + access_token,
             "Content-Type": "application/json",
