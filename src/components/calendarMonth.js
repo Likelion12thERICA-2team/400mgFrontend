@@ -5,7 +5,7 @@ import { endOfWeek, isSameDay, isSameMonth } from "date-fns";
 import { startOfMonth, endOfMonth } from "date-fns";
 
 import apiClient from "../apiClient";
-import NavigationBar from "./navigationBar";
+import NavigationBar from "./navigationBar2";
 import BottomSheet from "./bottomSheet";
 import SelectedWeek from "./selectWeek";
 
