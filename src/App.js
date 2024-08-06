@@ -21,7 +21,7 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-        {/* <Layout> */}
+        <Layout>
         <Routes>
           <Route exact path="/" element={<Splash />}></Route>
           <Route path="/start" element={<StartMain />}></Route>
@@ -38,7 +38,7 @@ function App() {
           <Route path="/community" element={<Community />}></Route>
           <Route path="/mypage" element={<Mypages />}></Route>
         </Routes>
-        {/* </Layout> */}
+        </Layout>
       </BrowserRouter>
     </div>
   );
