@@ -35,7 +35,7 @@ const NavigationBar = ({ page }) => {
                     />
                     <NavButton 
                         onClick={() => navigate("/report")} //URL 변경완료
-                        imgSrc={getImage("record", record, sRecord)}
+                        imgSrc={getImage("report", record, sRecord)}
                         altText="기록"
                         label="기록"
                     />
@@ -47,7 +47,7 @@ const NavigationBar = ({ page }) => {
                     />
                     <NavButton 
                         onClick={() => navigate("/mypage")} //URL 변경 완료
-                        imgSrc={getImage("my", mypage, sMypage)}
+                        imgSrc={getImage("mypage", mypage, sMypage)}
                         altText="마이"
                         label="마이"
                     />

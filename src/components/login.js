@@ -31,21 +31,21 @@ const Login = () => {
   };
 
   return (
-    <section className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]">
-      <div className="text-[26px] font-[AppleBold]">
+    <section className="mt-[26px] mb-[32px] flex flex-col  justify-center m-[20px] w-[350px]">
+      <div className="text-[26px] font-AppleBold items-start ">
         다시 돌아온 걸 환영해요 <br />
-        <span className="text-[16px] text-gray font-AppleSemiBold">
+        <span className="text-[16px] text-gray font-AppleSemiBold items-start justify-center">
           로그인하기 위한 회원정보를 입력해주세요
         </span>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px]">
+      <div className="flex flex-col items-center justify-center">
+        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[150px] ">
           이메일
         </div>
 
         <input
           type="text"
-          className="w-[267px] h-[44px] font-AppleMedium text-center mt-[10px] text-[22px]"
+          className="w-[267px] h-[44px] font-AppleMedium text-center items-center justify-center mt-[10px] text-[22px]"
           onChange={(e) => setEmail(e.target.value)}
         />
 
@@ -68,7 +68,7 @@ const Login = () => {
         </div>
       )}
 
-      <div className="absolute bottom-[32px] w-full flex">
+      <div className="absolute items-center bottom-[32px] flex">
         <div className="w-full max-w-md">
           <Button
             backgroundColor="#8478F7"
