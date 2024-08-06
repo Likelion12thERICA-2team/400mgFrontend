@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NavigationBar from "./navigationBar";
+import NavigationBar from "./navigationBar3";
 import Bell from "../assets/notifications.svg";
 import Chat from "../assets/chat_bubble.svg";
 import thumb_up from "../assets/thumb_up.svg";
@@ -142,11 +142,11 @@ const Feed = () => {
   }, [activeTab]);
 
   return (
-    <div className="h-[812px] w-[375px] bg-[#F6F6F6] flex flex-col">
+    <div className="h-[100vh] w-[100vw] bg-[#F6F6F6] flex flex-col">
       <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab === "게시글" ? (
-        <div className="overflow-y-auto h-[calc(100%-112px)] flex-grow">
+        <div className="overflow-y-auto h-[calc(100vh-13.79vh)] flex-grow">
           {posts.map((post, index) => (
             <Post key={index} {...post} handle_scrap={scrap_post} />
           ))}
@@ -162,7 +162,7 @@ const Feed = () => {
         </div>
       )}
       <button
-        className="p-[14px] border-2 rounded-full border-red bg-white border-solid w-[62px] h-[62px] absolute bottom-24 right-4"
+        className="p-[1.73vh] border-2 rounded-full border-red bg-white border-solid w-[16.53vw] h-[16.53vw] absolute bottom-24 right-4"
         onClick={() => {
           setBottomSheetVisible(true);
         }}
@@ -183,7 +183,7 @@ const Feed = () => {
         }}
       />
 
-      <NavigationBar page={"cummunity"} className="mt-auto" />
+      <NavigationBar page={"cummunity"} className="mt-[20vh]" />
     </div>
   );
 };
