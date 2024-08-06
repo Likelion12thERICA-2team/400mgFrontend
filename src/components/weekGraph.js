@@ -3,12 +3,13 @@ import React from 'react';
 const WeeklyCaffeineGraph = ({ data }) => {
     const maxCaffeine = Math.max(...data.map(day => day.amount));
     const maxHeight = 150; // 바의 최대 높이
+    const minHeight = 15;
 
     return (
         <div className="flex flex-col items-center">
             <div className="w-[335px] h-[170px] bg-white rounded-[20px] px-4 flex justify-center items-end">
                 {data.map((day, index) => {
-                    const height = (day.amount / maxCaffeine) * maxHeight; // 비례적으로 높이 계산
+                    const height = day.amount > 0 ? (day.amount / maxCaffeine) * maxHeight : minHeight; // 비례적으로 높이 계산
 
                     return (
                         <div key={index} className="flex flex-col items-center">

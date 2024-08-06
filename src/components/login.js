@@ -68,7 +68,7 @@ const Login = () => {
         </div>
       )}
 
-      <div className="absolute bottom-[32px] w-full flex">
+      <div className="absolute items-center bottom-[32px] w-full flex">
         <div className="w-full max-w-md">
           <Button
             backgroundColor="#8478F7"

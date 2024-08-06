@@ -13,7 +13,7 @@ const Mypage = () => {
     username: "",
     joined_date: "",
   });
-  const [howmuch, setHowmuch] = useState(0);
+  const [howmuch, setHowmuch] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
