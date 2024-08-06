@@ -600,7 +600,7 @@ const State = () => {
               }}
             >
               {/* 작은 블럭 색, 글자색,           문구 */}
-              <span className="w-[12vw] h-[9.6vw]">{state}</span>
+              <span className="">{state}</span>
             </div>
 
             {/* 메인 블록의 내용 */}
