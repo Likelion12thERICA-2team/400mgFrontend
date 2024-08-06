@@ -1,8 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Button from "./Button";
 import apiClient from "../apiClient";
 
-const SetNickname = ({ formdata, handle, navigate }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const SetNickname = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
@@ -67,7 +85,7 @@ const SetNickname = ({ formdata, handle, navigate }) => {
       <input
         type="text"
         className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
-        onChange={(e) => handle("username", e.target.value)}
+        onChange={(e) => handleInputChange("username", e.target.value)}
         value={formdata.username}
         required
       />
@@ -80,7 +98,7 @@ const SetNickname = ({ formdata, handle, navigate }) => {
       <input
         type="email"
         className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
-        onChange={(e) => handle("email", e.target.value)}
+        onChange={(e) => handleInputChange("email", e.target.value)}
         value={formdata.email}
         required
       />
@@ -92,7 +110,7 @@ const SetNickname = ({ formdata, handle, navigate }) => {
       <input
         type="password"
         className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
-        onChange={(e) => handle("password", e.target.value)}
+        onChange={(e) => handleInputChange("password", e.target.value)}
         value={formdata.password}
         required
       />
