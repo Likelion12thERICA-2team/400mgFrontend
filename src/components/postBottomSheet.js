@@ -1,32 +1,26 @@
 import React, { useState } from "react";
 
-const BottomSheet = ({ visible, onClose, onSubmit }) => {
-  const [content, setContent] = useState("");
+const BottomSheet = ({ visible, onClose, onSubmit, title, contentComponent }) => {
+  const [input, setInput] = useState("");
 
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-end">
+    <div className="fixed inset-0 bg-lightGray bg-opacity-50 flex justify-center items-end">
       <div className="bg-white w-full rounded-t-lg p-4">
-        <div className="flex justify-between items-center pb-[8px] border-b font-AppleSemiBold ">
-          <h2 className="ttext-[16px]">글 작성하기</h2>
+        <div className="flex justify-between items-center pb-2 text-[18px] font-AppleSemiBold border-b">
+          <h2 className="text-xl">{title}</h2>
           <button onClick={onClose}>&times;</button>
         </div>
-        <textarea
-          className="w-full p-2 border font-AppleMedium rounded mt-4"
-          rows="4"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="내용을 입력하세요..."
-        ></textarea>
+        {contentComponent({ input, setInput })}
         <button
-          className="bg-lightPurple text-white p-2 font-AppleMedium text-[16px] rounded mt-4 w-full"
+          className="bg-lightPurple text-[16px] font-AppleRegular text-white p-2 rounded mt-4 w-full"
           onClick={() => {
-            onSubmit(content);
-            setContent("");
+            onSubmit(input);
+            setInput("");
           }}
         >
-          게시
+          {title === "글 작성하기" ? "게시" : "추가"}
         </button>
       </div>
     </div>
