@@ -81,8 +81,8 @@ const CaffeineGraph = ({ caffeineData }) => {
   // const currentY = 73 - (currentCaffeineLevel / maxCaffeineValue) * 73;
 
   return (
-    <div className="w-[375px]">
-      <div className="h-[73px] relative">
+    <div className="w-[100vw]">
+      <div className="h-[8.99vh] relative">
         <svg className="w-full h-full">
           <defs>
             <linearGradient id="graphGradient" x1="0" x2="0" y1="0" y2="1">
@@ -95,28 +95,28 @@ const CaffeineGraph = ({ caffeineData }) => {
             d={getGraphPath()}
             fill="none"
             stroke="#999999"
-            strokeWidth="0.75"
+            strokeWidth="0.2vw"
           />
 
           <line
-            x1="187.5"
+            x1="50vw"
             y1="0"
-            x2="187.5"
-            y2="73"
+            x2="50vw"
+            y2="8.99vh"
             stroke="#999999"
-            strokeWidth="1"
+            strokeWidth="0.27vw"
           />
           <image
             href={circle}
-            x="182.5"
+            x="48.67vw"
             y={currentY - 5}
-            width="10"
-            height="10"
+            width="2.67vw"
+            height="1.23vh"
           />
         </svg>
       </div>
-      <div className="w-[375px] border-[0.75px] border-[#999999]" />
-      <div className="h-[20px] flex items-center justify-between text-[10px] font-AppleMedium text-[#5A5A5A] ">
+      <div className="w-[100vw] border-[0.2vw] border-[#999999]" />
+      <div className="h-[2.46vh] flex items-center justify-between text-[2.67vw] font-AppleMedium text-[#5A5A5A] ">
         {[-2, -1, 0, 1, 2].map((offset) => (
           <span key={offset} className="w-1/5 text-center">
             {getTimeLabel(currentIndex + offset * 6)}
