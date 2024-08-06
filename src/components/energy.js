@@ -11,7 +11,7 @@ const Energy = ({ onSelect }) => {
         { name: '벡셀', caffeine: 60 },
         { name: '박카스', caffeine: 30 },
         { name: '구론산 ', caffeine: 30 },
-      ];
+    ];
 
     // 버튼을 3개씩 그룹화
     const groupedItems = energyItems.reduce((resultArray, item, index) => { 
@@ -28,10 +28,10 @@ const Energy = ({ onSelect }) => {
             {groupedItems.map((group, groupIndex) => (
                 <div 
                     key={groupIndex} 
-                    className={`flex flex-row gap-[8px] ${
-                        groupIndex === 0 ? 'mt-[15px]' : 'mt-[12px]'
+                    className={`flex flex-row gap-[2.13vw] ${
+                        groupIndex === 0 ? 'mt-[1.85vh]' : 'mt-[1.48vh]'
                     } ${
-                        groupIndex === groupedItems.length - 1 ? 'mb-[18px]' : ''
+                        groupIndex === groupedItems.length - 1 ? 'mb-[2.23vh]' : ''
                     }`}
                 >
                     {group.map((item, index) => (
@@ -47,8 +47,6 @@ const Energy = ({ onSelect }) => {
             ))}
         </div>
     );
-
-
 };
 
 export default Energy;

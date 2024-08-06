@@ -10,35 +10,34 @@ const NewToggle = ({content, choice, isOpen, onToggle}) => {
 
     return (
         <>
-            <button 
-                className="flex items-center justify-between w-[375px] h-[59px] font-AppleMedium px-[37px]" 
-                onClick={onToggle} 
-            >
-                <span className="text-[#222222] text-[20px] text-left flex-grow whitespace-nowrap overflow-hidden text-ellipsis ">
-                        {content}
-                </span>
+    <button 
+        className="flex items-center justify-between w-[100vw] h-[7.26vh] font-AppleMedium px-[9.87vw]" 
+        onClick={onToggle} 
+    >
+        <span className="text-[#222222] text-[5.33vw] text-left flex-grow whitespace-nowrap overflow-hidden text-ellipsis">
+            {content}
+        </span>
 
-                <span className='ml-4 flex-shrink-0'>
-                    <img 
-                        src={isOpen ? arrowDown : arrowLeft} 
-                        alt={isOpen ? "arrowDown" : "arrowLeft"}
-                        className=""  // 이미지 크기 고정
-                    />
-                </span>
-                
-            </button>
+        <span className='ml-4 flex-shrink-0'>
+            <img 
+                src={isOpen ? arrowDown : arrowLeft} 
+                alt={isOpen ? "arrowDown" : "arrowLeft"}
+                className=""  // 이미지 크기 고정
+            />
+        </span>
+        
+    </button>
 
-            <div className="w-[375px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0px]" />
+    <div className="w-[100vw] my-[1.23vh] border-[0.75px] border-[#999999] mb-[0%] mt-[0px]" />
 
-            <ul style={{display: isOpen ? "block" : "none"}}>
-                    <div className='pl-[20px]'>
-                        {choice}
-                    </div>
-                    <div className="w-[375px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0px]" />
-            </ul>
+    <ul style={{display: isOpen ? "block" : "none"}}>
+        <div className='pl-[5.33vw]'>
+            {choice}
+        </div>
+        <div className="w-[100vw] my-[1.23vh] border-[0.75px] border-[#999999] mb-[0%] mt-[0px]" />
+    </ul>
+</>
 
-
-        </>
 
     );
 
