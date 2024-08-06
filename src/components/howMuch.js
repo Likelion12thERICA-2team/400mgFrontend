@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import WheelPicker from "./wheelPicker";
 import Button from "./Button";
 
-const HowMuch = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const HowMuch = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   const handleSelect = (name) => (value) => {
-    handle(name, value);
-    console.log("Selected value:", value);
+    handleInputChange(name, value);
   };
 
   return (
@@ -39,7 +56,7 @@ const HowMuch = ({ handle, onNext }) => {
             backgroundColor="#8478F7"
             color="white"
             content={"계속하기"}
-            onClick={onNext}
+            onClick={() => navigate("/start/signup2")}
           />
         </div>
       </div>

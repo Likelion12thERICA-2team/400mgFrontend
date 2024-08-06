@@ -1,11 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Button from "./Button";
 
-const ForWhat = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const ForWhat = () => {
   const options = ["직장", "학교", "취미", "공부", "기타"];
   const [selected, setSelected] = useState(
     new Array(options.length).fill(false)
   );
+
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
 
   const handleSelection = (index) => {
     setSelected((prev) => {
@@ -16,11 +28,17 @@ const ForWhat = ({ handle, onNext }) => {
   };
 
   useEffect(() => {
-    handle(
+    handleInputChange(
       "forWhat",
       options.filter((_, index) => selected[index])
     );
   }, [selected]);
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
 
   return (
     <section className="mt-[3.38vh] mb-[4.19vh] flex flex-col items-start justify-center mx-[5.33vw]">
@@ -49,7 +67,7 @@ const ForWhat = ({ handle, onNext }) => {
               backgroundColor={selected.includes(true) ? "#CBC7F6" : "#8478F7"}
               color="white"
               content={"계속하기"}
-              onClick={onNext}
+              onClick={() => navigate("/start/signup3")}
             />
           </div>
         </div>

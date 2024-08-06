@@ -13,32 +13,7 @@ import plus from "../assets/plus.svg";
 import FriendCard from "./FriendCard";
 import Post from "./Post";
 import TabNavigation from "./TabNavigation";
-
-// {
-//         "id": 1,
-//         "username": "exampleUser4",
-//         "subject": "subject1",
-//         "content": "content1",
-//         "post_date": "2024-07-31T18:36:23.832749+09:00",
-//         "image": null,
-//         "reply_count": 3,
-//         "scrap_count": 2,
-//         "is_scraped": true
-//     }
-
-// const FriendList = () => {
-
-//   return (
-//     <div
-//       className="overflow-y-auto flex flex-wrap flex-grow"
-//       style={{ alignContent: "flex-start" }}
-//     >
-//       {friends.map((friend, index) => (
-//         <FriendCard key={index} {...friend} />
-//       ))}
-//     </div>
-//   );
-// };
+import BottomSheet from "./postBottomSheet";
 
 const Feed = () => {
   const [activeTab, setActiveTab] = useState("게시글");
@@ -63,6 +38,8 @@ const Feed = () => {
       status: "친추",
     },
   ]);
+
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
   const fetchPosts = async () => {
     const access_token = localStorage.getItem("access_token");
@@ -187,13 +164,7 @@ const Feed = () => {
       <button
         className="p-[14px] border-2 rounded-full border-red bg-white border-solid w-[62px] h-[62px] absolute bottom-24 right-4"
         onClick={() => {
-          if (activeTab === "게시글") {
-            const content = prompt("내용");
-            createPost({ subject: "subject", content: content });
-          } else {
-            const friend = prompt("친구 이름");
-            followFriend(friend);
-          }
+          setBottomSheetVisible(true);
         }}
       >
         {activeTab === "게시글" ? (
@@ -202,6 +173,15 @@ const Feed = () => {
           <img src={plus} width={34} height={34} alt="Add" />
         )}
       </button>
+
+      <BottomSheet
+        visible={bottomSheetVisible}
+        onClose={() => setBottomSheetVisible(false)}
+        onSubmit={(content) => {
+          createPost({ subject: "subject", content: content });
+          setBottomSheetVisible(false);
+        }}
+      />
 
       <NavigationBar page={"cummunity"} className="mt-auto" />
     </div>

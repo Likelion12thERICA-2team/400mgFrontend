@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ToggleButton from "./toggleButton";
 import Contour from "./contour";
 import Allergy from "./allergy";
@@ -6,7 +6,25 @@ import Disease from "./disease";
 import Constitutuion from "./constitution";
 import Button from "./Button";
 
-const HealthCheck = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const HealthCheck = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   // 어떤 토글이 열려 있는지 추적하기 위한 상태
   const [openToggle, setOpenToggle] = useState(null);
 
@@ -56,7 +74,9 @@ const HealthCheck = ({ handle, onNext }) => {
           backgroundColor={"#8478F7"}
           color={"white"}
           content={"계속하기"}
-          onClick={onNext}
+          onClick={() => {
+            navigate("/start/bodyInfo3");
+          }}
         />
       </div>
     </section>
