@@ -14,25 +14,6 @@ import FriendCard from "./FriendCard";
 import Post from "./Post";
 import TabNavigation from "./TabNavigation";
 
-const scrap_post = async (post_id) => {
-  const access_token = localStorage.getItem("access_token");
-
-  try {
-    const response = await apiClient.post(
-      `posts/${post_id}/scraps/`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 // {
 //         "id": 1,
 //         "username": "exampleUser4",
@@ -97,6 +78,26 @@ const Feed = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const scrap_post = async (post_id) => {
+    const access_token = localStorage.getItem("access_token");
+
+    try {
+      const response = await apiClient.post(
+        `posts/${post_id}/scraps/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    fetchPosts();
   };
 
   const fetchFriends = async () => {
