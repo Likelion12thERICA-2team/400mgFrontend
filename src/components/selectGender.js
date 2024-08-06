@@ -1,8 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Round10Button from "./round10Button";
 import Button from "./Button";
 
-const SelectGender = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const SelectGender = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   const [selectedGender, setselectedGender] = useState("");
   const [showBirthdate, setShowBirthdate] = useState(false);
   const [year, setYear] = useState("");
@@ -14,13 +32,13 @@ const SelectGender = ({ handle, onNext }) => {
   const [weight, setWeight] = useState("");
 
   const handleNext = () => {
-    handle("gender", selectedGender);
-    handle("year", year);
-    handle("month", month);
-    handle("day", day);
-    handle("height", height);
-    handle("weight", weight);
-    onNext();
+    handleInputChange("gender", selectedGender);
+    handleInputChange("year", year);
+    handleInputChange("month", month);
+    handleInputChange("day", day);
+    handleInputChange("height", height);
+    handleInputChange("weight", weight);
+    navigate("/start/bodyInfo2");
   };
 
   const handleSelection = (gender) => {
