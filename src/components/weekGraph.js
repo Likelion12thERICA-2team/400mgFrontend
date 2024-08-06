@@ -28,7 +28,7 @@ const WeeklyCaffeineGraph = ({ data }) => {
             </div>
             <div className="flex justify-center w-[89.33vw] mt-[0.74vh]">
                 {data.map((day, index) => (
-                    <span key={index} className={`mx-[0.27vw] px-[2.67vw] text-[10px] text-AppleRegular ${day.isToday ? 'text-purple' : 'text-gray'}`}>
+                    <span key={index} className={`mx-[0.27vw] px-[3.87vw] text-[10px] text-AppleRegular ${day.isToday ? 'text-purple' : 'text-gray'}`}>
                         {day.date}
                     </span>
                 ))}

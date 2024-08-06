@@ -25,7 +25,7 @@ const NavigationBar = ({ page }) => {
         <>
             <div className="w-[375px] h-[70px] border-t-[0.5px] 
                 border-t-[#999999] rounded-t-[30px] bg-[#FFFFFF] mt-[10px]
-                pt-[17px] fixed bottom-0 z-50 items-start">
+                pt-[17px] fixed bottom-2 z-50 items-start">
                 <div className="w-[375px] h-[39px] flex flex-row justify-center items-center">
                     <NavButton 
                         onClick={() => navigate("/main")}

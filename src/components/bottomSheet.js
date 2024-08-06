@@ -40,7 +40,7 @@ const BottomSheet = ({ date, onClose, caffeineData }) => {
                 y: springProps.y,
                 maxHeight: '89.9vh'
              }}
-            className="fixed bottom-0  px-[5.6vw] flex flex-col w-[100vw] bg-[#F6F6F6] border-t border-gray shadow-lg rounded-t-2xl z-40 touch-none pb-[22.67vh] overflow-y-auto">
+            className="fixed bottom-0  px-[5.6vw] flex flex-col w-[100vw] bg-[#F6F6F6] border-t border-gray shadow-lg rounded-t-2xl z-40 touch-none pb-[10.67vh] overflow-y-auto">
             <div className="w-full flex justify-center pt-[2.67vh] mb-[1.47vh]" >
                 <div className="w-[11.47vw] h-[0.49vh] bg-gray rounded-full"></div>
             </div>
