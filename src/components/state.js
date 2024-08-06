@@ -546,9 +546,10 @@ const State = () => {
     <>
       <section className="flex justify-start">
         <div
-          className="h-[812px] w-[375px] relative overflow-hidden"
+          className="max-w-[375px] w-full h-screen mx-auto relative overflow-hidden"
           style={{ backgroundColor: bgColor }}
         >
+          {/* h-[6.16vh] w-[89.33vw] max-w-[335px] mx-auto mt-[3.2vh] flex flex-col */}
           <div className="h-[50px] w-[335px] ml-[20px] mr-[20px] mt-[26px] flex flex-col">
             <div className="h-[25px] w-[335px] flex justify-between">
               <span
