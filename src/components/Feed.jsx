@@ -141,6 +141,30 @@ const Feed = () => {
     fetchFriends();
   }, [activeTab]);
 
+  const renderContentComponent = ({ input, setInput }) => {
+    if (activeTab === "게시글") {
+      return (
+        <textarea
+          className="w-full p-2 border text-[14px] font-AppleRegular rounded mt-4"
+          rows="4"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="내용을 입력하세요..."
+        ></textarea>
+      );
+    } else {
+      return (
+        <input
+          type="text"
+          className="w-full p-2 text-[14px] font-AppleRegular border rounded mt-4"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="친구 이름을 입력하세요..."
+        />
+      );
+    }
+  };
+
   return (
     <div className="h-[100vh] w-[100vw] bg-[#F6F6F6] flex flex-col">
       <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -162,7 +186,7 @@ const Feed = () => {
         </div>
       )}
       <button
-        className="p-[1.73vh] border-2 rounded-full border-red bg-white border-solid w-[16.53vw] h-[16.53vw] absolute bottom-24 right-4"
+        className="p-[1.73vh] border-2 rounded-full border-purple bg-white border-solid w-[16.53vw] h-[16.53vw] absolute bottom-24 right-4"
         onClick={() => {
           setBottomSheetVisible(true);
         }}
@@ -177,10 +201,16 @@ const Feed = () => {
       <BottomSheet
         visible={bottomSheetVisible}
         onClose={() => setBottomSheetVisible(false)}
-        onSubmit={(content) => {
-          createPost({ subject: "subject", content: content });
+        onSubmit={(input) => {
+          if (activeTab === "게시글") {
+            createPost({ subject: "subject", content: input });
+          } else {
+            followFriend(input);
+          }
           setBottomSheetVisible(false);
         }}
+        title={activeTab === "게시글" ? "글 작성하기" : "친구 추가"}
+        contentComponent={renderContentComponent}
       />
 
       <NavigationBar page={"cummunity"} className="mt-[20vh]" />
