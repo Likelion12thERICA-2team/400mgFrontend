@@ -13,7 +13,7 @@ const Mypage = () => {
     username: "",
     joined_date: "",
   });
-  const [howmuch, setHowmuch] = useState(1);
+  const [howmuch, setHowmuch] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +28,7 @@ const Mypage = () => {
         const data = response.data;
         setUserProfile({
           username: data.username,
-          joined_date: data.joined_date,
+          joined_date: data.joined_date ,
         });
         calculateDay(data.joined_date);
       } catch (error) {
@@ -40,7 +40,7 @@ const Mypage = () => {
       const today = new Date();
       const startDate = new Date(joinedDate);
       const timeDifference = today.getTime() - startDate.getTime();
-      const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+      const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24)) + 1;
       setHowmuch(daysDifference);
     };
 
