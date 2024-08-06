@@ -11,7 +11,6 @@ const ForWhat = ({ handle, onNext }) => {
     setSelected((prev) => {
       let newSelected = [...prev];
       newSelected[index] = !prev[index];
-      //   console.log("Selected:", newSelected);
       return newSelected;
     });
   };
@@ -24,16 +23,16 @@ const ForWhat = ({ handle, onNext }) => {
   }, [selected]);
 
   return (
-    <section className="mt-[26px] mb-[32px] flex flex-col items-start justify-center m-[20px]">
-      <div className="text-[26px] font-AppleBold items-center ">
+    <section className="mt-[3.38vh] mb-[4.19vh] flex flex-col items-start justify-center mx-[5.33vw]">
+      <div className="text-[26px] font-AppleBold items-center">
         주로 무엇을 위해 카페인을 <br />
         찾으시나요?
       </div>
-      <div className="text-[16px] text-[#5A5A5A] font-AppleMedium items-center ">
+      <div className="text-[16px] text-[#5A5A5A] font-AppleMedium items-center">
         정확하게 기억이 안나도 괜찮아요
       </div>
-      <div className="w-[350px] h-[64px] mt-[85px] items-center justify-center">
-        <div className="gap-[12px] flex flex-col ">
+      <div className="w-[93.33vw] h-[8.53vh] mt-[11.4vh] items-center justify-center">
+        <div className="gap-[1.6vh] flex flex-col">
           {options.map((option, index) => (
             <div key={index} onClick={() => handleSelection(index)}>
               <Button
@@ -44,7 +43,7 @@ const ForWhat = ({ handle, onNext }) => {
             </div>
           ))}
         </div>
-        <div className="absolute bottom-[32px] w-full flex ">
+        <div className="absolute bottom-[4.19vh] w-full flex">
           <div className="w-full max-w-md">
             <Button
               backgroundColor={selected.includes(true) ? "#CBC7F6" : "#8478F7"}

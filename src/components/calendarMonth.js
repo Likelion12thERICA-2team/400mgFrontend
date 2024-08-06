@@ -34,10 +34,10 @@ const RenderDays = () => {
 };
 
 const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
-  const monthStart = startOfMonth(currentMonth); // 현재 달의 첫번째 날짜
-  const monthEnd = endOfMonth(monthStart); // monthstart의 마지막 날짜
-  const startDate = startOfWeek(monthStart); // monthstart 이 주의 첫 번째 날짜
-  const endDate = endOfWeek(monthEnd); // monthend 주의 마지막 날짜
+  const monthStart = startOfMonth(currentMonth);
+  const monthEnd = endOfMonth(monthStart);
+  const startDate = startOfWeek(monthStart);
+  const endDate = endOfWeek(monthEnd);
 
   const rows = [];
   let days = [];
@@ -54,23 +54,21 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
         onDateClick(innerDay);
       };
 
-      // 현재 월에 속하지 않는 날짜(안보이게 처리)
       if (!isSameMonth(innerDay, monthStart)) {
         days.push(
           <div
-            className="w-[50px] h-[64px] flex flex-col items-center justify-center bg-[transparent]"
+            className="w-[13.33vw] h-[7.88vh] flex flex-col items-center justify-center bg-[transparent]"
             key={uuid()}
           >
-            <span className="pt-[4px] text-[transparent]">{formattedDate}</span>
+            <span className="pt-[0.49vh] text-[transparent]">{formattedDate}</span>
           </div>
         );
-        //현재 월에 속하는 날짜(오늘 날짜는 배경색과 글자색 효과)
       } else {
         const isToday = isSameDay(innerDay, selectedDate);
 
         days.push(
           <div
-            className={`w-[50px] h-[64px] text-[14px] flex flex-col items-center justify-center ${
+            className={`w-[13.33vw] h-[7.88vh] text-[14px] flex flex-col items-center justify-center ${
               isToday ? "" : "bg-[transparent]"
             }`}
             key={uuid()}
@@ -100,11 +98,10 @@ const RenderCells = ({ currentMonth, selectedDate, onDateClick }) => {
         {days}
       </div>
     );
-    // 각 달의 마지막에 회색 구분선 추가
     if (lastDayOfMonth) {
       rows.push(
         <div
-          className="w-full left-0 right-0 border-b-[6px] border-lightGray "
+          className="w-full left-0 right-0 border-b-[0.74vh] border-lightGray"
           key={uuid()}
         ></div>
       );
@@ -121,7 +118,6 @@ const Calendar = () => {
   const selectedDate = new Date();
 
   let currentMonth = new Date(format(currentDate, "yyyy"));
-  //    console.log(currentMonth)
   let months = [];
 
   const monthRef = useRef(null);
@@ -145,9 +141,7 @@ const Calendar = () => {
   useEffect(() => {
     async function fetchData() {
       const access_token = localStorage.getItem("access_token");
-      // const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIyODUwMDYzLCJpYXQiOjE3MjI3NjM2NjMsImp0aSI6ImNmZWQ2MGZkNGJiZjRlZjU4NjFiY2JlZWVlNjU2MTk5IiwidXNlcl9pZCI6Mn0.A-5xp36cwJ5jKkmsPCIfhAsU4YxkIezgLuou_N0zmCU"
       try {
-        //API 요청
         const response = await apiClient.get("caffeinintakes/monthly/2024/8/", {
           headers: {
             Authorization: "Bearer " + access_token,
@@ -188,7 +182,7 @@ const Calendar = () => {
       format(currentMonth, "MM") === format(selectedDate, "MM");
     months.push(
       <div
-        className="w-[90%] h-[50%] pt-[5px] mb-[20px] "
+        className="w-[90%] h-[50%] pt-[0.61vh] mb-[2.46vh]"
         key={uuid()}
         ref={monthIsSelected ? monthRef : null}
       >
@@ -205,23 +199,23 @@ const Calendar = () => {
 
   useEffect(() => {
     if (monthRef.current !== null) {
-      const offset = monthRef.current.offsetTop - 100;
+      const offset = monthRef.current.offsetTop - window.innerHeight * 0.1232;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   }, []);
 
   const scrollCurrentMonth = () => {
     if (monthRef.current !== null) {
-      const offset = monthRef.current.offsetTop - 100;
+      const offset = monthRef.current.offsetTop - window.innerHeight * 0.1232;
       window.scrollTo({ top: offset, behavior: "smooth" });
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center font-[AppleRegular] w-[375px] mt-[20px] mb-[32px] mx-[5px] ">
-      <div className="sticky top-0 w-full z-20 bg-white flex flex-col items-center pt-[15px] pb-[10px]">
+    <div className="flex flex-col items-center justify-center font-[AppleRegular] w-[100vw] mt-[2.46vh] mb-[3.94vh] mx-[1.23vw]">
+      <div className="sticky top-0 w-full z-20 bg-white flex flex-col items-center pt-[1.84vh] pb-[1.23vh]">
         {!isBottomSheetVisible && (
-          <div className="w-[80%] flex justify-between items-baseline text-theme-main-color pb-[10px]">
+          <div className="w-[80%] flex justify-between items-baseline text-theme-main-color pb-[1.23vh]">
             <p
               className="cursor-pointer hover:scale-105 hover:text-red-700"
               onClick={scrollCurrentMonth}
