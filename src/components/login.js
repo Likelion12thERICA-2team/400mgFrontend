@@ -31,44 +31,44 @@ const Login = () => {
   };
 
   return (
-    <section className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]">
-      <div className="text-[26px] font-[AppleBold]">
+    <section className="mt-[3.38vh] mb-[4.19vh] flex flex-col justify-center mx-[5.33vw] w-[93.33vw]">
+      <div className="text-[26px] font-AppleBold items-start">
         다시 돌아온 걸 환영해요 <br />
-        <span className="text-[16px] text-gray font-AppleSemiBold">
+        <span className="text-[16px] text-gray font-AppleSemiBold items-start justify-center">
           로그인하기 위한 회원정보를 입력해주세요
         </span>
       </div>
-      <div className="flex flex-col items-center">
-        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px]">
+      <div className="flex flex-col items-center justify-center">
+        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[20.5vh]">
           이메일
         </div>
 
         <input
           type="text"
-          className="w-[267px] h-[44px] font-AppleMedium text-center mt-[10px] text-[22px]"
+          className="w-[71.2vw] h-[5.9vh] font-AppleMedium text-center items-center justify-center mt-[1.35vh] text-[22px]"
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
-        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[80px]">
+        <div className="w-[71.2vw] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
+        <div className="text-center text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[10.8vh]">
           비밀번호
         </div>
 
         <input
           type="password"
-          className="w-[267px] h-[44px] font-AppleMedium text-center mt-[10px] text-[22px]"
+          className="w-[71.2vw] h-[5.9vh] font-AppleMedium text-center mt-[1.35vh] text-[22px]"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
+        <div className="w-[71.2vw] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%]"></div>
       </div>
 
       {errorMessage && (
-        <div className="text-center text-[#ff0000] font-AppleMedium text-[16px] mt-[30px]">
+        <div className="text-center text-[#ff0000] font-AppleMedium text-[16px] mt-[4.05vh]">
           {errorMessage}
         </div>
       )}
 
-      <div className="absolute bottom-[32px] w-full flex">
+      <div className="absolute items-center bottom-[4.19vh] flex">
         <div className="w-full max-w-md">
           <Button
             backgroundColor="#8478F7"
