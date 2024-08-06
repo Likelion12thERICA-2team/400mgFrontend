@@ -23,10 +23,10 @@ const NavigationBar = ({ page }) => {
 
     return (
         <>
-            <div className="w-[375px] h-[70px] border-t-[0.5px] 
-                border-t-[#999999] rounded-t-[30px] bg-[#FFFFFF] mt-[10px]
-                pt-[17px]">
-                <div className="w-[375px] h-[39px] flex flex-row justify-center items-center">
+            <div className="w-[100vw] h-[8.62vh] border-t-[0.13vw] 
+                border-t-[#999999] rounded-t-[8vw] bg-[#FFFFFF] mt-[1.23vh]
+                pt-[2.09vh]">
+                <div className="w-[100vw] h-[4.80vh] flex flex-row justify-center items-center">
                     <NavButton 
                         onClick={() => navigate("/main")}
                         imgSrc={getImage("home", home, sHome)}
@@ -58,9 +58,9 @@ const NavigationBar = ({ page }) => {
 };
 
 const NavButton = ({ onClick, imgSrc, altText, label }) => (
-    <button className="w-[93.75px] flex flex-col justify-center items-center" onClick={onClick}>
+    <button className="w-[25vw] flex flex-col justify-center items-center" onClick={onClick}>
         <img src={imgSrc} alt={altText} />
-        <span className="font-AppleRegular text-[10px]">{label}</span>
+        <span className="font-AppleRegular text-[3.6vw]">{label}</span>
     </button>
 );
 
