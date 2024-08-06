@@ -98,7 +98,7 @@ const SetNickname = () => {
       <input
         type="email"
         className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
-        onChange={(e) => handle("email", e.target.value)}
+        onChange={(e) => handleInputChange("email", e.target.value)}
         value={formdata.email}
         required
       />
@@ -110,7 +110,7 @@ const SetNickname = () => {
       <input
         type="password"
         className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
-        onChange={(e) => handle("password", e.target.value)}
+        onChange={(e) => handleInputChange("password", e.target.value)}
         value={formdata.password}
         required
       />
