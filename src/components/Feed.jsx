@@ -7,29 +7,12 @@ import thumb_up_pressed from "../assets/thumb_up_pressed.svg";
 import Profile from "../assets/Rectangle 50.png";
 import TestImage from "../assets/TestImage.png";
 import apiClient from "../apiClient";
+import pencil from "../assets/pencil.svg";
+import plus from "../assets/plus.svg";
 
 import FriendCard from "./FriendCard";
 import Post from "./Post";
 import TabNavigation from "./TabNavigation";
-
-const scrap_post = async (post_id) => {
-  const access_token = localStorage.getItem("access_token");
-
-  try {
-    const response = await apiClient.post(
-      `posts/${post_id}/scraps/`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    console.log(response);
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 // {
 //         "id": 1,
@@ -97,6 +80,26 @@ const Feed = () => {
     }
   };
 
+  const scrap_post = async (post_id) => {
+    const access_token = localStorage.getItem("access_token");
+
+    try {
+      const response = await apiClient.post(
+        `posts/${post_id}/scraps/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    fetchPosts();
+  };
+
   const fetchFriends = async () => {
     const access_token = localStorage.getItem("access_token");
 
@@ -111,6 +114,49 @@ const Feed = () => {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const createPost = async ({ subject, content }) => {
+    const access_token = localStorage.getItem("access_token");
+
+    try {
+      const response = await apiClient.post(
+        "posts/",
+        {
+          subject: subject,
+          content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    fetchPosts();
+  };
+
+  const followFriend = async (friend) => {
+    const access_token = localStorage.getItem("access_token");
+
+    try {
+      const response = await apiClient.post(
+        `friend/${friend}/follow/`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    fetchFriends();
   };
 
   useEffect(() => {
@@ -138,6 +184,24 @@ const Feed = () => {
           ))}
         </div>
       )}
+      <button
+        className="p-[14px] border-2 rounded-full border-red bg-white border-solid w-[62px] h-[62px] absolute bottom-24 right-4"
+        onClick={() => {
+          if (activeTab === "게시글") {
+            const content = prompt("내용");
+            createPost({ subject: "subject", content: content });
+          } else {
+            const friend = prompt("친구 이름");
+            followFriend(friend);
+          }
+        }}
+      >
+        {activeTab === "게시글" ? (
+          <img src={pencil} width={34} height={34}></img>
+        ) : (
+          <img src={plus} width={34} height={34} alt="Add" />
+        )}
+      </button>
 
       <NavigationBar page={"cummunity"} className="mt-auto" />
     </div>
