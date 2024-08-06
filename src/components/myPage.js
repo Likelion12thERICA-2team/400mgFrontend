@@ -49,7 +49,7 @@ const Mypage = () => {
 
   return (
     <section className="h-[100vh] w-[100vw] pt-[3.38vh] pb-[4.19vh] flex flex-col bg-[#f6f6f6] relative">
-      <div className="text-[18px] font-AppleMedium items-start px-[5.33vw] pb-[14.38vh]">
+      <div className="text-[18px] font-AppleMedium items-start px-[5.33vw] pb-[10.38vh]">
         마이페이지
         <div className="flex pt-[3.69vh]">
           <img src={profile} className="w-[74px] h-[74px]"></img>
@@ -113,7 +113,7 @@ const Mypage = () => {
           </div>
         </div>
       </div>
-      <NavigationBar page={"mypage"} className="absolute" />
+      <NavigationBar page={"mypage"} />
     </section>
   );
 };

@@ -53,59 +53,59 @@ const SetNickname = ({ formdata, handle, navigate }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]"
+      className="mt-[3.38vh] mb-[4.19vh] flex flex-col justify-start px-[5.33vw]"
     >
       <div className="text-[26px] font-[AppleBold]">
         거의 다왔어요. <br />
         뭐라고 부르면 될까요?
       </div>
 
-      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[25px] ml-[119px]">
+      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[3.38vh] ml-[31.73vw]">
         당신의 이름...
       </div>
 
       <input
         type="text"
-        className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
+        className="w-[71.2vw] h-[5.88vh] font-AppleMedium text-center ml-[9.07vw] mt-[3.85vh] text-[22px]"
         onChange={(e) => handle("username", e.target.value)}
         value={formdata.username}
         required
       />
-      <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[34px]"></div>
+      <div className="w-[71.2vw] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[9.07vw]"></div>
 
-      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[50px] ml-[119px]">
+      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[6.7vh] ml-[31.73vw]">
         당신의 이메일...
       </div>
 
       <input
         type="email"
-        className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
+        className="w-[71.2vw] h-[5.88vh] font-AppleMedium text-center ml-[9.07vw] mt-[3.85vh] text-[22px]"
         onChange={(e) => handle("email", e.target.value)}
         value={formdata.email}
         required
       />
-      <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[34px]"></div>
+      <div className="w-[71.2vw] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[9.07vw]"></div>
 
-      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[50px] ml-[119px]">
+      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[6.7vh] ml-[31.73vw]">
         당신의 비밀번호...
       </div>
       <input
         type="password"
-        className="w-[267px] h-[44px] font-AppleMedium text-center ml-[34px] mt-[29px] text-[22px]"
+        className="w-[71.2vw] h-[5.88vh] font-AppleMedium text-center ml-[9.07vw] mt-[3.85vh] text-[22px]"
         onChange={(e) => handle("password", e.target.value)}
         value={formdata.password}
         required
       />
 
-      <div className="w-[267px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[34px]"></div>
+      <div className="w-[71.2vw] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[0%] ml-[9.07vw]"></div>
 
       {errorMessage && (
-        <div className="text-center text-exgray font-AppleMedium text-[16px] mt-[30px]">
+        <div className="text-center text-exgray font-AppleMedium text-[16px] mt-[4.05vh]">
           {errorMessage}
         </div>
       )}
 
-      <div className="absolute bottom-[32px] w-full flex">
+      <div className="absolute bottom-[4.19vh] w-full flex">
         <Button
           backgroundColor={"#8478F7"}
           color={"white"}
@@ -118,3 +118,4 @@ const SetNickname = ({ formdata, handle, navigate }) => {
 };
 
 export default SetNickname;
+
