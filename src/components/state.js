@@ -200,12 +200,16 @@ const State = () => {
     console.log("전송할 데이터:", data); // 전송할 데이터 로깅
 
     axios
-      .post("https://400mg.duckdns.org/caffeinintakes/", data, {
-        headers: {
-          Authorization: "Bearer " + access_token,
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/caffeinintakes/",
+        data,
+        {
+          headers: {
+            Authorization: "Bearer " + access_token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((response) => {
         console.log("카페인 섭취 기록 성공:", response.data);
         setInputAmount("");
@@ -509,12 +513,16 @@ const State = () => {
       };
 
       axios
-        .post("https://400mg.duckdns.org/caffeinintakes/", data, {
-          headers: {
-            Authorization: "Bearer " + access_token,
-            "Content-Type": "application/json",
-          },
-        })
+        .post(
+          "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/caffeinintakes/",
+          data,
+          {
+            headers: {
+              Authorization: "Bearer " + access_token,
+              "Content-Type": "application/json",
+            },
+          }
+        )
         .then((response) => {
           console.log("카페인 섭취 기록 성공:", response.data);
           GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
