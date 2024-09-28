@@ -3,8 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 const itemHeight = 40;
 
 const WheelPicker = ({ items, onSelect }) => {
-  // items에 선택 옵션들 배열로 넣으면 됨
-  const [selectedItem, setSelectedItem] = useState(items[2]); // 초기 선택 항목을 중앙으로 설정
+  const [selectedItem, setSelectedItem] = useState(items[0]); // 초기 선택 항목을 중앙으로 설정
   const listRef = useRef(null);
 
   useEffect(() => {
@@ -23,17 +22,12 @@ const WheelPicker = ({ items, onSelect }) => {
   }, []);
 
   useEffect(() => {
-    const index = items.indexOf(selectedItem);
-    listRef.current.scrollTo({
-      top: (index + 2) * itemHeight, // 중앙에 선택된 항목이 위치하도록 스크롤 조정
-      behavior: "smooth",
-    });
     onSelect(selectedItem);
-  }, [selectedItem, onSelect]);
+  }, [selectedItem]);
 
   return (
     <div className="flex flex-col items-center no-scrollbar">
-      <div className="relative h-40 w-32 overflow-hidden">
+      <div className="relative h-[10vh] w-[32vw] overflow-hidden">
         <div
           ref={listRef}
           className="h-full overflow-y-scroll"
@@ -47,7 +41,7 @@ const WheelPicker = ({ items, onSelect }) => {
                   _,
                   index // 위쪽에 빈 항목 추가
                 ) => (
-                  <li key={`spacer-top-${index}`} className="h-10" />
+                  <li key={`spacer-top-${index}`} className="h-[2.5vh]" />
                 )
               )}
             {items.map((item, index) => (
@@ -74,7 +68,7 @@ const WheelPicker = ({ items, onSelect }) => {
                   _,
                   index // 아래쪽에 빈 항목 추가
                 ) => (
-                  <li key={`spacer-bottom-${index}`} className="h-10" />
+                  <li key={`spacer-bottom-${index}`} className="h-[2.5vh]" />
                 )
               )}
           </ul>

@@ -1,8 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Round10Button from "./round10Button";
 import Button from "./Button";
 
-const SelectGender = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const SelectGender = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   const [selectedGender, setselectedGender] = useState("");
   const [showBirthdate, setShowBirthdate] = useState(false);
   const [year, setYear] = useState("");
@@ -14,13 +32,13 @@ const SelectGender = ({ handle, onNext }) => {
   const [weight, setWeight] = useState("");
 
   const handleNext = () => {
-    handle("gender", selectedGender);
-    handle("year", year);
-    handle("month", month);
-    handle("day", day);
-    handle("height", height);
-    handle("weight", weight);
-    onNext();
+    handleInputChange("gender", selectedGender);
+    handleInputChange("year", year);
+    handleInputChange("month", month);
+    handleInputChange("day", day);
+    handleInputChange("height", height);
+    handleInputChange("weight", weight);
+    navigate("/start/bodyInfo2");
   };
 
   const handleSelection = (gender) => {
@@ -72,8 +90,8 @@ const SelectGender = ({ handle, onNext }) => {
   };
 
   return (
-    <section className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]">
-      <div className="text-[26px] font-[AppleBold]">
+    <section className="mt-[3.42vh] mb-[3.95vh] flex flex-col justify-start px-[5.33vw]">
+      <div className="text-[6.93vw] font-[AppleBold]">
         {showBodyinfo
           ? "신체정보를 알려주세요."
           : showBirthdate
@@ -81,7 +99,7 @@ const SelectGender = ({ handle, onNext }) => {
           : "성별이 어떻게 되시나요?"}
       </div>
 
-      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[10px]">
+      <div className="text-[4.27vw] text-[#5A5A5A] font-[AppleMedium] mt-[1.23vh]">
         건강한 카페인 습관에 필요해요! <br />
         외부에 공유되지 않아요.
       </div>
@@ -89,23 +107,23 @@ const SelectGender = ({ handle, onNext }) => {
       {showBodyinfo ? (
         <>
           <div className="">
-            <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px] mb-[26px]">
+            <div className="text-[3.73vw] text-[#5A5A5A] font-[AppleRegular] mt-[4.93vh] mb-[3.19vh]">
               키 / 몸무게
             </div>
 
-            <div className="flex flex-row gap-[27px]">
+            <div className="flex flex-row gap-[7.2vw]">
               <div className="">
                 <input
                   type="text"
                   placeholder="키"
-                  className="w-[107px] h-[20.25px] font-AppleMedium text-right border-b border-gray-300"
+                  className="w-[28.53vw] h-[2.49vh] font-AppleMedium text-right border-b border-gray-300"
                   value={height}
                   onChange={handleHeightChange}
                 />
                 <input
                   type="text"
                   placeholder="cm"
-                  className="w-[36px] h-[20.25px] font-AppleMedium text-right border-b border-gray-300
+                  className="w-[9.6vw] h-[2.49vh] font-AppleMedium text-right border-b border-gray-300
                                         bg-[#FFFF] placeholder-black"
                   disabled
                 />
@@ -115,14 +133,14 @@ const SelectGender = ({ handle, onNext }) => {
                 <input
                   type="text"
                   placeholder="몸무게"
-                  className="w-[107px] h-[20.25px] font-AppleMedium text-right border-b border-gray-300"
+                  className="w-[28.53vw] h-[2.49vh] font-AppleMedium text-right border-b border-gray-300"
                   value={weight}
                   onChange={handleWeightChange}
                 />
                 <input
                   type="text"
                   placeholder="kg"
-                  className="w-[36px] h-[20.25px] font-AppleMedium text-right border-b border-gray-300
+                  className="w-[9.6vw] h-[2.49vh] font-AppleMedium text-right border-b border-gray-300
                                         bg-[#FFFF] placeholder-black"
                   disabled
                 />
@@ -137,16 +155,16 @@ const SelectGender = ({ handle, onNext }) => {
       {showBirthdate ? (
         <>
           <div className="">
-            <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px] mb-[10px]">
+            <div className="text-[3.73vw] text-[#5A5A5A] font-[AppleRegular] mt-[4.93vh] mb-[1.23vh]">
               생년월일
             </div>
 
-            <div className="flex flex-row gap-[11px]">
+            <div className="flex flex-row gap-[2.93vw]">
               <input
                 type="text"
                 placeholder="YYYY"
                 maxLength="4"
-                className="rounded-[10px] w-[104px] h-[44px] font-AppleMedium text-center"
+                className="rounded-[2.93vw] w-[27.73vw] h-[5.43vh] font-AppleMedium text-center"
                 style={{ backgroundColor: "#EBEBEB" }}
                 value={year}
                 onChange={handleYearChange}
@@ -155,7 +173,7 @@ const SelectGender = ({ handle, onNext }) => {
                 type="text"
                 placeholder="MM"
                 maxLength="2"
-                className="rounded-[10px] w-[104px] h-[44px] font-AppleMedium text-center"
+                className="rounded-[2.93vw] w-[27.73vw] h-[5.43vh] font-AppleMedium text-center"
                 style={{ backgroundColor: "#EBEBEB" }}
                 value={month}
                 onChange={handleMonthChange}
@@ -164,7 +182,7 @@ const SelectGender = ({ handle, onNext }) => {
                 type="text"
                 placeholder="DD"
                 maxLength="2"
-                className="rounded-[10px] w-[104px] h-[44px] font-AppleMedium text-center"
+                className="rounded-[2.93vw] w-[27.73vw] h-[5.43vh] font-AppleMedium text-center"
                 style={{ backgroundColor: "#EBEBEB" }}
                 value={day}
                 onChange={handleDayChange}
@@ -175,10 +193,10 @@ const SelectGender = ({ handle, onNext }) => {
       ) : (
         <></>
       )}
-      <div className="text-[14px] text-[#5A5A5A] font-[AppleRegular] mt-[40px]">
+      <div className="text-[3.73vw] text-[#5A5A5A] font-[AppleRegular] mt-[4.93vh]">
         성별
       </div>
-      <div className="flex flex-row gap-[11px] mt-[10px]">
+      <div className="flex flex-row gap-[2.93vw] mt-[1.23vh]">
         <div onClick={() => handleSelection("남자")}>
           <Round10Button
             backgroundColor={"#EBEBEB"}
@@ -207,10 +225,10 @@ const SelectGender = ({ handle, onNext }) => {
           <div
             className={
               showBodyinfo
-                ? "mt-[255px]"
+                ? "mt-[31.42vh]"
                 : showBirthdate
-                ? "mt-[366px]"
-                : "mt-[481px]"
+                ? "mt-[45.06vh]"
+                : "mt-[59.25vh]"
             }
           >
             <Button
@@ -226,10 +244,10 @@ const SelectGender = ({ handle, onNext }) => {
           <div
             className={
               showBodyinfo
-                ? "mt-[255px]"
-                : showBirthdate
-                ? "mt-[366px]"
-                : "mt-[481px]"
+              ? "mt-[31.42vh]"
+              : showBirthdate
+              ? "mt-[45.06vh]"
+              : "mt-[59.25vh]"
             }
           >
             <Button

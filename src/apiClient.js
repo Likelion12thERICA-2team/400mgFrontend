@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://13.209.186.104/",
+  baseURL: "https://400mg.duckdns.org/",
   headers: {
     "Content-Type": "application/json",
   },

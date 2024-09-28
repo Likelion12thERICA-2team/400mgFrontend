@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ToggleButton from "./toggleButton";
 import Contour from "./contour";
 import Allergy from "./allergy";
@@ -6,7 +6,25 @@ import Disease from "./disease";
 import Constitutuion from "./constitution";
 import Button from "./Button";
 
-const HealthCheck = ({ handle, onNext }) => {
+import { SignupContext } from "../SignupContext";
+import { useNavigate } from "react-router-dom";
+
+const HealthCheck = () => {
+  const [formdata, setFormdata] = useContext(SignupContext);
+
+  const handleInputChange = (name, value) => {
+    setFormdata((prevdata) => ({
+      ...prevdata,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formdata);
+  }, [formdata]);
+
+  const navigate = useNavigate();
+
   // 어떤 토글이 열려 있는지 추적하기 위한 상태
   const [openToggle, setOpenToggle] = useState(null);
 
@@ -17,18 +35,18 @@ const HealthCheck = ({ handle, onNext }) => {
   };
 
   return (
-    <section className="mt-[26px] mb-[32px] flex flex-col justify-start px-[20px]">
+    <section className="mt-[3.38vh] mb-[4.19vh] flex flex-col justify-start px-[5.33vw]">
       <div className="text-[26px] font-[AppleBold]">
         갖고계신 질병이나 특이체질이 <br />
         있다면 알려주세요.
       </div>
 
-      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[10px]">
+      <div className="text-[16px] text-[#5A5A5A] font-[AppleMedium] mt-[1.35vh]">
         건강한 카페인 습관에 필요해요! <br />
         외부에 공유되지 않아요.
       </div>
 
-      <Contour top={29} />
+      <Contour top={7.84} />
 
       <ToggleButton
         content="알러지"
@@ -51,12 +69,14 @@ const HealthCheck = ({ handle, onNext }) => {
         onToggle={() => handleToggle(3)} // 세 번째 토글 클릭 시 handleToggle 호출
       />
 
-      <div className={openToggle ? "mt-[152px]" : "mt-[343px]"}>
+      <div className={openToggle ? "mt-[20.8vh]" : "mt-[45.8vh]"}>
         <Button
           backgroundColor={"#8478F7"}
           color={"white"}
           content={"계속하기"}
-          onClick={onNext}
+          onClick={() => {
+            navigate("/start/bodyInfo3");
+          }}
         />
       </div>
     </section>

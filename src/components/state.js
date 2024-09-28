@@ -25,9 +25,13 @@ import ButtonGroup from "./buttonGroup";
 import CaffeineGraph from "./caffeineGraph";
 
 import axios from "axios";
+import moment from "moment";
+
+import apiClient from "../apiClient";
 
 const State = () => {
   const [num, setNum] = useState(0); // 상태
+  const [username, setUsername] = useState(""); // 유저 이름
   const [miniBg, setMiniBg] = useState(""); // 작은 블럭 색
   const [state, setState] = useState(""); // 상태 문구
   const [wordColor, setWordColor] = useState(""); // 글자색
@@ -41,30 +45,21 @@ const State = () => {
   const [isThirdTab, setIsThirdTab] = useState(false);
 
   const [openToggle, setOpenToggle] = useState(null); // 어떤 토글이 열려 있는지 추적하기 위한 상태
-  const [isSelected, setIsSelected] = useState(false); // 동그라미 버튼 선택 상태 추가
+  const [selectedItems, setSelectedItems] = useState([]); //카페인 양
+  const [caffeineType, setCaffeineType] = useState(""); //카페인 종류
 
-  const [currCaffeine, setCurrCaffeine] = useState(0); // 현재 카페인 섭취량
-
-  // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
-  const dummyCaffeineData = Array(145)
-    .fill(0)
-    .map(() => Math.random() * 100);
-
-  // 토글 버튼 클릭 시 호출되는 함수
-  const handleToggle = (index) => {
-    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
-    setOpenToggle(openToggle === index ? null : index);
-  };
+  const [caffeineAmount, setCaffeineAmount] = useState(300); // 현재까지의 카페인 섭취량
+  const [currCaffineAmount, setCurrCaffeineAmount] = useState(0); // 현재 카페인 흡수량
+  const [lastIntakeTime, setLastIntakeTime] = useState(null); //카페인 마지막 섭취 시간
+  const [caffeineData, setCaffeineData] = useState(Array(145).fill(0)); //체내 카페인 수치 계산된 배열
+  const [inputAmount, setInputAmount] = useState(""); // 사용자 입력 카페인 양
 
   const inputRef = useRef(null);
 
-  //임의의 카페인 섭취량
-  const caffeineAmount = 600;
-
-  // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
-  useEffect(() => {
-    caffeine2state(caffeineAmount);
-  }, []); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
+  //   // 임의의 카페인 데이터 생성 (실제로는 백엔드에서 받아와야 함)
+  //   const dummyCaffeineData = Array(145)
+  //     .fill(0)
+  //     .map(() => Math.random() * 400);
 
   const access_token = localStorage.getItem("access_token");
 
@@ -72,7 +67,7 @@ const State = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "http://13.209.186.104/caffeinintakes/",
+      url: "https://400mg.duckdns.org/caffeinintakes/",
       headers: {
         Authorization: "Bearer " + access_token,
       },
@@ -83,20 +78,188 @@ const State = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         let sum = 0;
+        let latestIntakeTime = null;
 
-        for (let i = 0; i < response.data.length; i++) {
-          sum += response.data[i].amount;
+        // 가장 최근의 섭취 시간 찾기
+        response.data.forEach((intake) => {
+          const intakeTime = moment(intake.time);
+          if (!latestIntakeTime || intakeTime.isAfter(latestIntakeTime)) {
+            latestIntakeTime = intakeTime;
+          }
+        });
+
+        // 24시간 이내의 섭취량만 합산
+        response.data.forEach((intake) => {
+          const intakeTime = moment(intake.time);
+          if (latestIntakeTime.diff(intakeTime, "hours") <= 24) {
+            sum += intake.amount;
+          }
+        });
+
+        // for (let i = 0; i < response.data.length; i++) {
+        //   sum += response.data[i].amount;
+        // }
+
+        setCaffeineAmount(sum);
+      })
+      .catch((error) => {
+        console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineAmount(0);
+      });
+  };
+
+  const getLastCaffeineIntake = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "https://400mg.duckdns.org/caffeinintakes/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        if (response.data.length > 0) {
+          // 가장 최근의 카페인 섭취 시간 찾기
+          const latestIntake = response.data.reduce((latest, current) =>
+            moment(current.time).isAfter(moment(latest.time)) ? current : latest
+          );
+          setLastIntakeTime(moment(latestIntake.time));
         }
-        setCurrCaffeine(sum);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
+  const getTimeDifference = () => {
+    if (!lastIntakeTime) return "데이터 없음";
+
+    const now = moment();
+    const duration = moment.duration(now.diff(lastIntakeTime));
+    const minutes = duration.asMinutes();
+
+    if (minutes < 60) {
+      return `${Math.floor(minutes)}분`;
+    } else if (minutes < 24 * 60) {
+      return `${Math.floor(duration.asHours())}시간`;
+    } else if (minutes < 7 * 24 * 60) {
+      return `${Math.floor(duration.asDays())}일`;
+    } else {
+      return `${Math.floor(duration.asWeeks())}주`;
+    }
+  };
+
+  const getCaffeineData = () => {
+    const access_token = localStorage.getItem("access_token");
+    let config = {
+      method: "get",
+      url: "https://400mg.duckdns.org/caffeinintakes/predict/",
+      headers: {
+        Authorization: "Bearer " + access_token,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        // API에서 받아온 데이터를 caffeineData 상태에 설정
+        setCaffeineData(response.data);
+        // 현재 카페인 섭취량 계산 (배열의 첫 번째 요소)
+        // setCaffeineAmount(Math.round(response.data[0]));
+      })
+      .catch((error) => {
+        console.log(error);
+        // 에러 발생 시 기본값으로 설정
+        setCaffeineData(Array(145).fill(0));
+        // setCaffeineAmount(0);
+      });
+  };
+
+  const handleInputChange = (e) => {
+    setInputAmount(e.target.value);
+  };
+
+  const complete = () => {
+    const amount = parseInt(inputAmount, 10);
+    if (isNaN(amount)) {
+      alert("올바른 숫자를 입력해주세요.");
+      return;
+    }
+
+    const data = {
+      time: new Date().toISOString(),
+      amount: amount,
+      caffeinType: "커피", // 기본값으로 "커피"를 설정했습니다. 필요에 따라 수정하세요.
+    };
+
+    console.log("전송할 데이터:", data); // 전송할 데이터 로깅
+
+    axios
+      .post("https://400mg.duckdns.org/caffeinintakes/", data, {
+        headers: {
+          Authorization: "Bearer " + access_token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("카페인 섭취 기록 성공:", response.data);
+        setInputAmount("");
+        GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+        getLastCaffeineIntake();
+      })
+      .catch((error) => {
+        console.error(
+          "카페인 섭취 기록 실패:",
+          error.response ? error.response.data : error.message
+        );
+        alert(
+          "카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요."
+        );
+      });
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+  };
+
   useEffect(() => {
-    GetCaffeine();
+    getLastCaffeineIntake(); // 초기 데이터 로드
+    const interval = setInterval(getLastCaffeineIntake, 60000); // 1분마다 호출
+
+    return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 정리
   }, []);
+
+  //유저 이름 받아오기
+  const fetchUser = async () => {
+    const access_token = localStorage.getItem("access_token");
+    try {
+      const response = await apiClient.get("mypage/myinfo/", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setUsername(response.data.username);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번만 호출
+  useEffect(() => {
+    caffeine2state(caffeineAmount);
+    GetCaffeine();
+    getCaffeineData();
+  }, [caffeineAmount]); // 빈 배열을 넣어 의존성 배열을 설정하여 처음 렌더링될 때만 호출
 
   const toggleBox = () => {
     if (caffeineAmount >= 400) {
@@ -108,32 +271,12 @@ const State = () => {
 
   const noBox = () => {
     setIsBoxVisible(!isBoxVisible);
-    console.log(isFirstTab);
   };
 
   const yesBox = () => {
     setIsBoxVisible(!isBoxVisible);
     setIsRecordVisible(!isRecordVisible);
   };
-
-  const complete = () => {
-    setIsRecordVisible(!isRecordVisible);
-    setIsFirstTab(true);
-    setIsSecondTab(false);
-    setIsThirdTab(false);
-  };
-
-  useEffect(() => {
-    console.log("Updated isFirstTab:", isFirstTab);
-  }, [isFirstTab]);
-
-  useEffect(() => {
-    console.log("Updated isSecondTab:", isSecondTab);
-  }, [isSecondTab]);
-
-  useEffect(() => {
-    console.log("Updated isThirdTab:", isThirdTab);
-  }, [isThirdTab]);
 
   const firstTab = () => {
     setIsFirstTab(!isFirstTab);
@@ -275,15 +418,15 @@ const State = () => {
   const getHello1 = () => {
     switch (num) {
       case 1:
-        return <> 오랜만이에요 커피중독님! </>; //양호
+        return <> 오랜만이에요 {username}님! </>; //양호
       case 2:
-        return <> 커피중독님, 오늘도 화이팅이에요! </>; // 보통
+        return <> {username}님, 오늘도 화이팅이에요! </>; // 보통
       case 3:
-        return <> 커피중독님, 잠은 좀 깨셨나요? </>; // 집중
+        return <> {username}님, 잠은 좀 깨셨나요? </>; // 집중
       case 4:
-        return <> 오랜만이에요 커피중독님! </>; // 각성
+        return <> 오랜만이에요 {username}님! </>; // 각성
       case 5:
-        return <> 오랜만이에요 커피중독님! </>; // 과잉
+        return <> 오랜만이에요 {username}님! </>; // 과잉
       case 6:
         return <> 더이상 카페인은 힘들어요. </>; // 한계
       default:
@@ -337,17 +480,80 @@ const State = () => {
     }
   };
 
+  // 토글 버튼 클릭 시 호출되는 함수
+  const handleToggle = (index) => {
+    // 클릭한 토글이 이미 열려 있으면 닫고, 그렇지 않으면 열기
+    setOpenToggle(openToggle === index ? null : index);
+    setCaffeineType(
+      index === 1 ? "커피" : index === 2 ? "에너지드링크" : "기타"
+    );
+  };
+
+  const handleItemSelect = (item) => {
+    setSelectedItems((prevItems) => {
+      const itemIndex = prevItems.findIndex((i) => i.name === item.name);
+      if (itemIndex > -1) {
+        return prevItems.filter((i) => i.name !== item.name);
+      } else {
+        return [...prevItems, item];
+      }
+    });
+  };
+
+  const tcomplete = () => {
+    selectedItems.forEach((item) => {
+      const data = {
+        time: new Date().toISOString(),
+        amount: item.caffeine,
+        caffeinType: caffeineType,
+      };
+
+      axios
+        .post("https://400mg.duckdns.org/caffeinintakes/", data, {
+          headers: {
+            Authorization: "Bearer " + access_token,
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("카페인 섭취 기록 성공:", response.data);
+          GetCaffeine(); // 새로운 데이터로 총 카페인 섭취량 업데이트
+          getLastCaffeineIntake();
+        })
+        .catch((error) => {
+          console.error(
+            "카페인 섭취 기록 실패:",
+            error.response ? error.response.data : error.message
+          );
+          alert(
+            "카페인 섭취 기록에 실패했습니다. 자세한 내용은 콘솔을 확인해주세요."
+          );
+        });
+    });
+
+    // 기록 후 상태 초기화
+    setSelectedItems([]);
+    setOpenToggle(0);
+    setCaffeineType("");
+
+    setIsRecordVisible(!isRecordVisible);
+    setIsFirstTab(true);
+    setIsSecondTab(false);
+    setIsThirdTab(false);
+  };
+
   return (
     <>
       <section className="flex justify-start">
         <div
-          className="h-[812px] w-[375px] relative overflow-hidden"
+          className="max-w-[100vw] w-full h-screen mx-auto relative overflow-hidden"
           style={{ backgroundColor: bgColor }}
         >
-          <div className="h-[50px] w-[335px] ml-[20px] mr-[20px] mt-[26px] flex flex-col">
-            <div className="h-[25px] w-[335px] flex justify-between">
+          {/* h-[6.16vh] w-[89.33vw] max-w-[335px] mx-auto mt-[3.2vh] flex flex-col */}
+          <div className="h-[6.16vh] w-[89.33vw] ml-[5.33vw] mr-[5.33vw] mt-[3.2vh] flex flex-col">
+            <div className="h-[3.08vh] w-[89.33vw] flex justify-between">
               <span
-                className="text-[18px] font-[AppleSemiBold] "
+                className="text-[4.8vw] font-[AppleSemiBold] "
                 style={{ color: topColor }}
               >
                 {/* 커피중독님, 오늘도 화이팅이에요! */}
@@ -359,9 +565,9 @@ const State = () => {
               </span>
             </div>
 
-            <div className="h-[25px] w-[335px] flex justify-start">
+            <div className="h-[3.08vh] w-[89.33vw] flex justify-start">
               <span
-                className="text-[18px] font-[AppleSemiBold] "
+                className="text-[4.8vw] font-[AppleSemiBold] "
                 style={{ color: topColor }}
               >
                 {/* 커피중독님, 오늘도 화이팅이에요! */}
@@ -370,23 +576,23 @@ const State = () => {
             </div>
           </div>
 
-          <div className="mt-[24px] flex justify-center">
+          <div className="mt-[2.96vh] flex justify-center">
             {/* gif */}
             <img
               src={getImageSrc()}
               alt="보통 표정"
-              className="w-[270px] h-[270px]"
+              className="w-[72vw] h-[72vw]"
             />
           </div>
 
           {/*  이모지 밑 상태창 */}
-          <div className="relative w-[375px] h-[396px] bg-[#FFFFFF] rounded-t-[30px] mt-[46px]">
+          <div className="relative w-[100vw] h-[48.77vh] bg-[#FFFFFF] rounded-t-[6vh] mt-[6vh]">
             {/* 상단에 걸쳐있는 작은 블록 */}
             <div
-              className="small-block w-[101px] h-[56px] absolute top-0 left-1/2 transform
-                                -translate-x-1/2 -translate-y-1/2 rounded-[30px]
-                                flex items-center justify-center
-                                bg-[#FFFFFF] text-black text-[26px] font-[AppleBold]"
+              className="small-block w-[26.93vw] h-[6.9vh] absolute top-0 left-1/2 transform
+                        -translate-x-1/2 -translate-y-1/2 rounded-[8vw]
+                        flex items-center justify-center
+                        bg-[#FFFFFF] text-black text-[6.93vw] font-[AppleBold]"
               style={{
                 backgroundColor: miniBg,
                 color: wordColor,
@@ -394,56 +600,65 @@ const State = () => {
               }}
             >
               {/* 작은 블럭 색, 글자색,           문구 */}
-              <span className="w-[45px] h-[36px]">{state}</span>
+              <span className="">{state}</span>
             </div>
 
             {/* 메인 블록의 내용 */}
             <div
-              className="main-block bg-[#FFFFFF] border-t-[0.5px]
-                             border-t-[#999999] rounded-t-[30px] pt-[53px]"
+              className="main-block bg-[#FFFFFF] border-t-[0.13vw]
+                             border-t-[#999999] rounded-t-[8vw] pt-[6.53vh]"
             >
-              <div className="h-[77px] w-[375px] flex flex-row">
-                <div className="w-[187px] flex flex-col items-center">
-                  <span className="h-[20px] font-[AppleMedium] text-[14px] text-[#999999]">
+              <div className="h-[9.48vh] w-[100vw] flex flex-row">
+                <div className="w-[49.87vw] flex flex-col items-center">
+                  <span className="h-[2.46vh] font-[AppleMedium] text-[3.73vw] text-[#999999]">
                     지금까지 마신 카페인
                   </span>
-                  <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    {currCaffeine} / 400mg
+                  <span className="h-[3.08vh] font-[AppleMedium] text-[4.8vw] mt-[0.74vh]">
+                    <span
+                      className={`${
+                        caffeineAmount >= 400
+                          ? "text-[#FF3B30]"
+                          : "text-[#222222]"
+                      }`}
+                    >
+                      {caffeineAmount}
+                    </span>
+                    <span className="text-[#222222]"> / 400mg</span>
                   </span>
                 </div>
 
-                <div className="h-[59px] border-[0.75px] border-[#999999]" />
+                <div className="h-[7.27vh] border-[0.2vw] border-[#999999]" />
 
-                <div className="w-[187px] flex flex-col items-center">
-                  <span className="h-[20px] font-[AppleMedium] text-[14px] text-[#999999]">
+                <div className="w-[49.87vw] flex flex-col items-center">
+                  <span className="h-[2.46vh] font-[AppleMedium] text-[3.73vw] text-[#999999]">
                     마지막으로 마신지
                   </span>
-                  <span className="h-[25px] font-[AppleMedium] text-[18px] text-[#222222] mt-[6px]">
-                    2일
+                  <span className="h-[3.08vh] font-[AppleMedium] text-[4.8vw] text-[#222222] mt-[0.74vh]">
+                    {getTimeDifference()}
                   </span>
                 </div>
               </div>
 
               <div className="flex justify-center itme-center">
                 <button
-                  className="bg-[#A198F6] w-[189px] h-[44px] rounded-[30px]"
+                  className="bg-[#A198F6] w-[50.4vw] h-[5.42vh] rounded-[8vw]"
                   onClick={toggleBox}
                 >
                   <span
-                    className="font-[AppleSemiBold] text-[16px] 
+                    className="font-[AppleSemiBold] text-[4.27vw] 
                                         text-[#FFFFFF] flex justify-center "
                   >
                     기록하러 가기
-                    <img src={pen} alt="펜" className="ml-[8px]" />
+                    <img src={pen} alt="펜" className="ml-[2.13vw]" />
                   </span>
                 </button>
               </div>
 
-              <div className="w-[375px] border-[0.75px] border-[#999999] mt-[18px]" />
+              <div className="w-[100vw] border-[0.2vw] border-[#999999] mt-[2.22vh]" />
 
               {/* 여기서 [그래프 + 선 + 시간] 들어가기 */}
 
-              <CaffeineGraph caffeineData={dummyCaffeineData} />
+              <CaffeineGraph caffeineData={caffeineData} />
 
               {/* <div className="w-[375px] h-[73px] ">
                                 
@@ -457,13 +672,13 @@ const State = () => {
 
                             </div> */}
 
-              <div className="w-[375px] h-[28px] flex justify-center mt-[3px]">
+              <div className="w-[100vw] h-[3.45vh] flex justify-center mt-[0.37vh]">
                 <div
                   ref={inputRef}
-                  className="h-[28px] rounded-[26px] bg-[#FFFFFF] 
-                                        border-[#E6E6E6] text-[#5A5A5A] font-[AppleMedium]
-                                        border-[1px] text-[10px] text-center px-[17px]
-                                        flex items-center justify-center whitespace-nowrap"
+                  className="h-[3.45vh] rounded-[6.93vw] bg-[#FFFFFF] 
+                                border-[#E6E6E6] text-[#5A5A5A] font-[AppleMedium]
+                                border-[0.27vw] text-[2.67vw] text-center px-[4.53vw]
+                                flex items-center justify-center whitespace-nowrap"
                 >
                   {getBottom()}
                 </div>
@@ -491,26 +706,28 @@ const State = () => {
 
           {/* 경고 슬라이딩 박스 */}
           <div
-            className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[30px]
-                            transition-transform duration-300 ease-in-out
+            className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[8vw]
+                            transition-transform duration-300 ease-in-out 
                             ${isBoxVisible ? "bottom-0" : "translate-y-full"}`}
-            style={{ height: "323px" }}
+            style={{ height: "39.78vh" }}
           >
-            <div className="pt-[35px] flex flex-col justify-center items-center">
-              <img src={error} alt="경고 표시" className="w-[55px] h-[55px]" />
-              <div className="text-[20px] font-[AppleBold] text-[#222222] mt-[19px] flex flex-col justify-center items-center">
+            <div className="pt-[4.31vh] flex flex-col justify-center items-center ">
+              <img src={error} alt="경고 표시" className="w-[14.67vw] h-[6.77vh]" />
+              <div className="text-[5.33vw] font-[AppleBold] text-[#222222] mt-[2.34vh] flex flex-col justify-center items-center">
                 <div> 오늘의 카페인 할당량을 </div>
                 <div>
-                  <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요.
+                  {/* <span className="text-[#FF3B30]">900mg</span> 이나 초과했어요. */}
+                  <span className="text-[#FF3B30]">{caffeineAmount - 400}</span>
+                  <span className="text-[#FF3B30]">mg</span> 이나 초과했어요.
                 </div>
               </div>
-              <div className="font-AppleRegular text-[#222222] text-[16px] mt-[12px]">
+              <div className="font-AppleRegular text-[#222222] text-[4.27vw] mt-[1.48vh]">
                 계속 기록하시겠어요?
               </div>
-              <div className="flex flex-row gap-[8px] text-[16px] mt-[46px]">
+              <div className="flex flex-row gap-[2.13vw] text-[4.27vw] mt-[5.67vh]">
                 <button
                   className="text-[#222222] font-[AppleBold] bg-[#EBEBEB] 
-                                        rounded-[20px] w-[155px] h-[54px]"
+                                        rounded-[5.33vw] w-[41.33vw] h-[6.65vh]"
                   onClick={yesBox}
                 >
                   예
@@ -518,7 +735,7 @@ const State = () => {
 
                 <button
                   className="text-[#FFFFFF] font-[AppleBold] bg-[#8478F7] 
-                                        rounded-[20px] w-[155px] h-[54px]"
+                                        rounded-[5.33vw] w-[41.33vw] h-[6.65vh]"
                   onClick={noBox}
                 >
                   아니오
@@ -529,25 +746,25 @@ const State = () => {
 
           {/* 기록 슬라이딩 박스 */}
           <div
-            className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[30px]
-                            transition-transform duration-300 ease-in-out
+            className={`absolute left-0 right-0 bg-[#FFFFFF] rounded-t-[8vw]
+                            transition-transform duration-300 ease-in-out z-80
                             ${
                               isRecordVisible ? "bottom-0" : "translate-y-full"
                             }`}
-            style={{ height: "742px" }}
+            style={{ height: "91.38vh" }}
           >
             {/* 뒤로가기+기록 */}
             {isFirstTab ? (
               <>
-                <div className=" flex flex-row justify-center w-[375px] h-[25px] mt-[21px]">
-                  <div className=" font-AppleMedium text-[#000000] text-[18px]">
+                <div className=" flex flex-row justify-center w-[100vw] h-[3.08vh] mt-[2.59vh]">
+                  <div className=" font-AppleMedium text-[#000000] text-[4.8vw]">
                     기록
                   </div>
                 </div>
               </>
             ) : isSecondTab ? (
               <>
-                <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                <div className=" flex flex-row justify-start items-center w-[100vw] h-[3.08vh] mt-[2.59vh] ">
                   <button
                     onClick={() => {
                       firstTab();
@@ -561,14 +778,14 @@ const State = () => {
                     />
                   </button>
 
-                  <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                  <div className="font-AppleMedium text-[#000000] text-[4.8vw] ml-[34.4vw]">
                     기록
                   </div>
                 </div>
               </>
             ) : isThirdTab ? (
               <>
-                <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                <div className=" flex flex-row justify-start items-center w-[100vw] h-[3.08vh] mt-[2.59vh] ">
                   <button
                     onClick={() => {
                       secondTab();
@@ -582,14 +799,14 @@ const State = () => {
                     />
                   </button>
 
-                  <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                  <div className="font-AppleMedium text-[#000000] text-[4.8vw] ml-[34.4vw]">
                     기록
                   </div>
                 </div>
               </>
             ) : (
               <>
-                <div className=" flex flex-row justify-start items-center w-[375px] h-[25px] mt-[21px] ">
+                <div className=" flex flex-row justify-start items-center w-[100vw] h-[3.08vh] mt-[2.59vh] ">
                   <button
                     onClick={() => {
                       secondTab();
@@ -602,7 +819,7 @@ const State = () => {
                     />
                   </button>
 
-                  <div className="font-AppleMedium text-[#000000] text-[18px] ml-[129px]">
+                  <div className="font-AppleMedium text-[#000000] text-[4.8vw] ml-[34.4vw]">
                     기록
                   </div>
                 </div>
@@ -610,69 +827,69 @@ const State = () => {
             )}
             {isFirstTab ? (
               <>
-                <div className="w-[375px] h-[72px] flex flex-row justify-start mt-[10px]">
-                  <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                <div className="w-[100vw] h-[8.87vh] flex flex-row justify-start mt-[1.23vh]">
+                  <span className="text-[6.93vw] font-AppleSemiBold text-[#000000] ml-[5.33vw]">
                     카페인을 기록하기 전에 오늘의 <br />
                     상태를 알려주세요.
                   </span>
                 </div>
 
-                <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                  <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]">
+                <div className="w-[100vw] h-[2.59vh] flex flex-row justify-start mt-[4.93vh]">
+                  <span className="text-[3.73vw] font-AppleReBold text-[#5A5A5A] ml-[5.6vw]">
                     {" "}
                     나의 컨디션{" "}
                   </span>
                 </div>
 
                 <ButtonGroup />
-                <div className="w-[375px] h-[18px] flex flex-row gap-[53px] mt-[22px] justify-center ml-[4px]">
-                  <span className="font-AppleMedium text-[12px] text-[#999999]">
+                <div className="w-[100vw] h-[2.22vh] flex flex-row gap-[14.13vw] mt-[2.71vh] justify-center ml-[1.07vw]">
+                  <span className="font-AppleMedium text-[3.2vw] text-[#999999]">
                     최악
                   </span>
-                  <span className="font-AppleMedium text-[12px] text-[#999999]">
+                  <span className="font-AppleMedium text-[3.2vw] text-[#999999]">
                     별로
                   </span>
-                  <span className="font-AppleMedium text-[12px] text-[#999999]">
+                  <span className="font-AppleMedium text-[3.2vw] text-[#999999]">
                     보통
                   </span>
-                  <span className="font-AppleMedium text-[12px] text-[#999999]">
+                  <span className="font-AppleMedium text-[3.2vw] text-[#999999]">
                     양호
                   </span>
-                  <span className="font-AppleMedium text-[12px] text-[#999999]">
+                  <span className="font-AppleMedium text-[3.2vw] text-[#999999]">
                     최상
                   </span>
                 </div>
 
-                <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                  <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]">
+                <div className="w-[100vw] h-[2.59vh] flex flex-row justify-start mt-[4.93vh]">
+                  <span className="text-[3.73vw] font-AppleReBold text-[#5A5A5A] ml-[5.6vw]">
                     {" "}
                     수면시간{" "}
                   </span>
                 </div>
 
-                <div className="w-[375px] h-[44px] flex flex-row justify-start items-center mt-[10px]">
+                <div className="w-[100vw] h-[5.42vh] flex flex-row justify-start items-center mt-[1.23vh]">
                   <input
                     type="text"
                     placeholder="시간"
-                    className="ml-[21px] w-[71px] h-[44px] bg-[#EBEBEB] rounded-[10px] 
-                                                text-[#999999] text-[16px] font-AppleMedium text-center"
+                    className="ml-[5.6vw] w-[18.93vw] h-[5.42vh] bg-[#EBEBEB] rounded-[2.67vw] 
+                    text-[#999999] text-[4.27vw] font-AppleMedium text-center"
                   />
-                  <span className="w-[28px] h-[24px] ml-[5px] text-[16px] font-AppleMedium text-[#5A5A5A]">
+                  <span className="w-[7.47vw] h-[2.96vh] ml-[1.33vw] text-[4.27vw] font-AppleMedium text-[#5A5A5A]">
                     시간
                   </span>
                 </div>
 
-                <div className="w-[375px] h-[21px] flex flex-row justify-start mt-[40px]">
-                  <span className="text-[14px] font-AppleReBold text-[#5A5A5A] ml-[21px]">
+                <div className="w-[100vw] h-[2.59vh] flex flex-row justify-start mt-[4.93vh]">
+                  <span className="text-[3.73vw] font-AppleReBold text-[#5A5A5A] ml-[5.6vw]">
                     {" "}
                     특이사항{" "}
                   </span>
                 </div>
-                <div className="ml-[21px]">
+                <div className="ml-[5.6vw]">
                   <Significant />
                 </div>
 
-                <div className="mt-[46px] flex justify-center">
+                <div className="mt-[5.67vh] flex justify-center">
                   <Button
                     backgroundColor={"#8478F7"}
                     color={"white"}
@@ -686,8 +903,8 @@ const State = () => {
               </>
             ) : isSecondTab ? (
               <>
-                <div className="w-[375px] h-[108px] flex flex-row justify-start mt-[10px]">
-                  <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                <div className="w-[100vw] h-[13.3vh] flex flex-row justify-start mt-[1.23vh]">
+                  <span className="text-[6.93vw] font-AppleSemiBold text-[#000000] ml-[5.33vw]">
                     오늘 마신 커피나 드링크같은 <br />
                     각성제의 카페인 함유량을 <br />
                     알고있나요?
@@ -698,7 +915,7 @@ const State = () => {
                   <img src={coffee} alt="커피" className="" />
                 </div>
 
-                <div className="mt-[31px] flex justify-center">
+                <div className="mt-[3.82vh] flex justify-center">
                   <Button
                     backgroundColor={"#8478F7"}
                     color={"white"}
@@ -710,7 +927,7 @@ const State = () => {
                     }}
                   />
                 </div>
-                <div className="mt-[12px] flex justify-center">
+                <div className="mt-[1.48vh] flex justify-center">
                   <Button
                     backgroundColor={"#EBEBEB"}
                     color={"black"}
@@ -724,27 +941,29 @@ const State = () => {
               </>
             ) : isThirdTab ? (
               <>
-                <div className="w-[375px] h-[36px] flex flex-row justify-start mt-[10px]">
-                  <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                <div className="w-[100vw] h-[4.43vh] flex flex-row justify-start mt-[1.23vh]">
+                  <span className="text-[6.93vw] font-AppleSemiBold text-[#000000] ml-[5.33vw]">
                     함유량을 적어주세요.
                   </span>
                 </div>
-                <div className="w-[375px] h-[24px] flex flex-row justify-start mt-[83px] ml-[23px]">
+                <div className="w-[100vw] h-[2.96vh] flex flex-row justify-start mt-[10.22vh] ml-[6.13vw]">
                   <input
                     type="text"
                     placeholder="카페인"
-                    className="w-[106px] h-[24px] font-AppleMedium text-right border-b border-[#999999] text-[16px]"
+                    value={inputAmount}
+                    onChange={handleInputChange}
+                    className="w-[28.27vw] h-[2.96vh] font-AppleMedium text-right border-b border-[#999999] text-[4.27vw]"
                   />
                   <input
                     type="text"
                     placeholder="mg"
-                    className="w-[34px] h-[24px] font-AppleMedium text-right border-b border-[#999999]
-                                                bg-[#FFFF] placeholder-black text-[16px]"
+                    className="w-[9.07vw] h-[2.96vh] font-AppleMedium text-right border-b border-[#999999]
+                    bg-[#FFFF] placeholder-black text-[4.27vw]"
                     disabled
                   />
                 </div>
 
-                <div className="mt-[447px] flex justify-center">
+                <div className="mt-[55.05vh] flex justify-center">
                   <Button
                     backgroundColor={"#8478F7"}
                     color={"white"}
@@ -756,41 +975,41 @@ const State = () => {
               </>
             ) : (
               <>
-                <div className="w-[375px] h-[36px] flex flex-row justify-start mt-[10px]">
-                  <span className="text-[26px] font-AppleSemiBold text-[#000000] ml-[20px]">
+                <div className="w-[100vw] h-[4.43vh] flex flex-row justify-start mt-[1.23vh]">
+                  <span className="text-[6.93vw] font-AppleSemiBold text-[#000000] ml-[5.33vw]">
                     각성제의 종류를 골라주세요.
                   </span>
                 </div>
 
-                <div className="w-[375px] my-[1%] border-[1px] border-[#999999] mb-[0%] mt-[23px]" />
+                <div className="w-[100vw] my-[1%] border-[0.27vw] border-[#999999] mb-[0%] mt-[2.83vh]" />
 
                 <NewToggle
                   content="커피"
-                  choice={<Coffee />}
+                  choice={<Coffee onSelect={handleItemSelect} />}
                   isOpen={openToggle === 1}
                   onToggle={() => handleToggle(1)}
                 />
                 <NewToggle
                   content="에너지드링크"
-                  choice={<Energy />}
+                  choice={<Energy onSelect={handleItemSelect} />}
                   isOpen={openToggle === 2}
                   onToggle={() => handleToggle(2)}
                 />
                 <NewToggle
                   content="기타"
-                  choice={<Dessert />}
+                  choice={<Dessert onSelect={handleItemSelect} />}
                   isOpen={openToggle === 3}
                   onToggle={() => handleToggle(3)}
                 />
 
                 <div className="flex justify-center">
-                  <div className={openToggle ? "mt-[163px]" : "mt-[354px]"}>
+                  <div className={openToggle ? "mt-[20.07vh]" : "mt-[43.6vh]"}>
                     <Button
                       backgroundColor={"#8478F7"}
                       color={"white"}
                       content={"완료"}
                       fontStyle={"AppleRegular"}
-                      onClick={complete}
+                      onClick={tcomplete}
                     />
                   </div>
                 </div>

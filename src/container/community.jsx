@@ -1,15 +1,15 @@
-import State from "../components/state";
+import Post from "../components/Feed";
 
-const Main = () => {
+const Community = () => {
   return (
     <div className="">
       <main className="">
         <div className="">
-          <State />
+          <Post />
         </div>
       </main>
     </div>
   );
 };
 
-export default Main;
+export default Community;
