@@ -2,7 +2,8 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://400mg.duckdns.org/",
+  baseURL:
+    "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/",
   headers: {
     "Content-Type": "application/json",
   },

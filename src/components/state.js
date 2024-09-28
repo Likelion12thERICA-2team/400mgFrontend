@@ -67,7 +67,7 @@ const State = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://400mg.duckdns.org/caffeinintakes/",
+      url: "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/caffeinintakes/",
       headers: {
         Authorization: "Bearer " + access_token,
       },
@@ -113,7 +113,7 @@ const State = () => {
     const access_token = localStorage.getItem("access_token");
     let config = {
       method: "get",
-      url: "https://400mg.duckdns.org/caffeinintakes/",
+      url: "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/caffeinintakes/",
       headers: {
         Authorization: "Bearer " + access_token,
       },
@@ -157,7 +157,7 @@ const State = () => {
     const access_token = localStorage.getItem("access_token");
     let config = {
       method: "get",
-      url: "https://400mg.duckdns.org/caffeinintakes/predict/",
+      url: "https://port-0-backend400mg-temp-jvpb2mlof9h57p.sel5.cloudtype.app/caffeinintakes/predict/",
       headers: {
         Authorization: "Bearer " + access_token,
       },
@@ -712,7 +712,11 @@ const State = () => {
             style={{ height: "39.78vh" }}
           >
             <div className="pt-[4.31vh] flex flex-col justify-center items-center ">
-              <img src={error} alt="경고 표시" className="w-[14.67vw] h-[6.77vh]" />
+              <img
+                src={error}
+                alt="경고 표시"
+                className="w-[14.67vw] h-[6.77vh]"
+              />
               <div className="text-[5.33vw] font-[AppleBold] text-[#222222] mt-[2.34vh] flex flex-col justify-center items-center">
                 <div> 오늘의 카페인 할당량을 </div>
                 <div>
